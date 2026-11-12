@@ -28,7 +28,7 @@ Branch: feat/foundation. Delivery strategy: ask-on-risk → chain strategy: stac
 | T8 | S2, S5, S7, S10 | Editor island: shadcn form, server preview with sequence numbers | inline | pending | |
 | T9 | S2, S4 | Reference template `clasico-marco-doble/v1` | inline | done | RED→GREEN 22 tests (fixtures x formats, QR/links, crop marks, fonts inlined), commit 04b0e80 (485 lines, one unit) |
 | T10 | S1, S5, S7 | Pages: landing, gallery, checkout | inline | pending | |
-| T11 | S9 | Rate limits + draft TTL cron | inline | pending | |
+| T11 | S9 | Rate limits + draft TTL cron | inline | done | RED→GREEN 6 integration tests (limits, fixed window, concurrent hits, access-link email+IP, 30-day cleanup, keeps drafts with payments); branch pr/10-rate-limits |
 | T12 | S4, S9, S10 | Visual regression (layout matrix + font specimens) + E2E happy path | inline | pending | |
 
 Out of MVP: boleta electrónica and print shop validation (print values fixed: 21x15 cm, 3 mm bleed, RGB).
