@@ -1,5 +1,5 @@
 Objective: build the wedding invitation designer described in docs/superpowers/specs/2026-11-12-wedding-invitation-designer-design.md (rev 3).
-Branch: feat/foundation. Delivery strategy: ask-on-risk. Test runner: Vitest (unit/integration), Playwright (visual/E2E).
+Branch: feat/foundation. Delivery strategy: ask-on-risk → chain strategy: stacked-to-main. Test runner: Vitest (unit/integration), Playwright (visual/E2E).
 
 ## Specs
 
@@ -18,9 +18,9 @@ Branch: feat/foundation. Delivery strategy: ask-on-risk. Test runner: Vitest (un
 
 | ID | Specs | Task | Route | Status | Evidence |
 |---|---|---|---|---|---|
-| T1 | S6, S7 | Scaffold: Astro SSR (Node) + React + Tailwind + shadcn/ui + TS + Vitest, screaming folders | inline | done | check 0 errors, build ok, landing ships 0 scripts |
-| T2 | S6, S9, S10 | Postgres via docker compose + Drizzle schema for all tables + first migration | inline | pending | |
-| T3 | S2, S3, S9, S10 | Invitations domain: reference Zod schema (https URLs), name-lock rule, edit window, content hash (TDD) | inline | pending | |
+| T1 | S6, S7 | Scaffold: Astro SSR (Node) + React + Tailwind + shadcn/ui + TS + Vitest, screaming folders | inline | done | check 0 errors, build ok, landing ships 0 scripts, commit 8d5b10e |
+| T2 | S6, S9, S10 | Postgres via docker compose + Drizzle schema for all tables + first migration | inline | done | 5 integration tests (no RED: written with schema), commit 5a862f2 |
+| T3 | S2, S3, S9, S10 | Invitations domain: reference Zod schema (https URLs), name-lock rule, edit window, content hash (TDD) | inline | done | RED 4 suites → GREEN 38 tests, commit df3942e |
 | T4 | S5, S8, S10 | Payments domain: PaymentGateway port + fake, status cache in same tx, idempotent webhook, refund (TDD + integration) | inline | pending | |
 | T5 | S9 | Auth: sessions, access-link tokens, email port (Resend adapter) | inline | pending | |
 | T6 | S4, S9, S10 | Render worker: pinned Playwright image, no network, page pool, preview + export services | inline | pending | |
@@ -41,3 +41,5 @@ Out of MVP: boleta electrónica and print shop validation (print values fixed: 2
 - L4: Forecast well above 400 authored lines; chain strategy to be asked once before the next commit after the threshold.
 - L5 (2026-11-12): "eliminar la sección de prerrequisitos, pasar ambos puntos a “fuera del MVP”, fijar esos valores en la tabla de formatos y quitar “bloquea la venta” de los pendientes." Applied: print PDF fixed at 21x15 cm, 3 mm bleed, RGB; T9 unblocked.
 - L6 (2026-11-12): T1 done. Astro 7.4 requires Node >=22.23.4 → pinned 22.23.5 in `.node-version` (fnm). `astro check` rejects TypeScript 7 → pinned TypeScript 6. shadcn initialized with Base UI (`-b base`), not Radix. `astro add` wrote `minimumReleaseAgeExclude` entries to `pnpm-workspace.yaml` (pnpm supply-chain age policy bypass for fresh Astro packages); kept to allow install, flagged to the user.
+- L7 (2026-11-12): T3 done (commit df3942e). Name rule implemented as: matched words within floor(len/4) edits, removed + added words ≤ 1, at least one match. T2 skipped for now: Docker daemon not running.
+- L8 (2026-11-12): User chose "PR directo a Main" → stacked-to-main. T2 done (commit 5a862f2). Postgres on port 5433 (local Postgres occupies 5432). esbuild build script approved in pnpm-workspace.yaml.
