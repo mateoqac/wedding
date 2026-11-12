@@ -21,7 +21,7 @@ Branch: feat/foundation. Delivery strategy: ask-on-risk → chain strategy: stac
 | T1 | S6, S7 | Scaffold: Astro SSR (Node) + React + Tailwind + shadcn/ui + TS + Vitest, screaming folders | inline | done | check 0 errors, build ok, landing ships 0 scripts, commit 8d5b10e |
 | T2 | S6, S9, S10 | Postgres via docker compose + Drizzle schema for all tables + first migration | inline | done | 5 integration tests (no RED: written with schema), commit 5a862f2 |
 | T3 | S2, S3, S9, S10 | Invitations domain: reference Zod schema (https URLs), name-lock rule, edit window, content hash (TDD) | inline | done | RED 4 suites → GREEN 38 tests, commit df3942e |
-| T4 | S5, S8, S10 | Payments domain: PaymentGateway port + fake, status cache in same tx, idempotent webhook, refund (TDD + integration) | inline | pending | |
+| T4 | S5, S8, S10 | Payments domain: PaymentGateway port + fake, status cache in same tx, idempotent webhook, refund (TDD + integration) | inline | done (review pending) | RED→GREEN: 15 unit + 8 integration, commits 96b360f, 47b8ef8 |
 | T5 | S9 | Auth: sessions, access-link tokens, email port (Resend adapter) | inline | pending | |
 | T6 | S4, S9, S10 | Render worker: pinned Playwright image, no network, page pool, preview + export services | inline | pending | |
 | T7 | S4, S9 | Export pipeline: pg-boss `exclusive` + singletonKey, exports cache, R2 adapter | inline | pending | |
@@ -44,3 +44,4 @@ Out of MVP: boleta electrónica and print shop validation (print values fixed: 2
 - L7 (2026-11-12): T3 done (commit df3942e). Name rule implemented as: matched words within floor(len/4) edits, removed + added words ≤ 1, at least one match. T2 skipped for now: Docker daemon not running.
 - L8 (2026-11-12): User chose "PR directo a Main" → stacked-to-main. T2 done (commit 5a862f2). Postgres on port 5433 (local Postgres occupies 5432). esbuild build script approved in pnpm-workspace.yaml.
 - L9 (2026-11-12): Stacked-to-main slices (authored lines, generated excluded): PR1 pr/1-scaffold (docs+T1, 288) → PR2 pr/2-invitation-rules (T3 rules, 304, 25 tests) → PR3 pr/3-template-schema (T3 schema, 167, 38 tests) → PR4 pr/4-database (T2, 359, +5 integration). Each branch verified independently. feat/foundation kept as backup (identical final tree). Not pushed: push/PR creation is the user's decision.
+- L10 (2026-11-12): User: "sin github, mete directo los branches a main, sin problema" → fast-forwarded main through pr/1..pr/4. T4 on pr/5-payments: assess risk high (payments hot path); Risk: item 2 (webhook verification guard). gentle-ai sync run to clear managed_assets_outdated. Review consent asked (lineage review-b1411cb5ba8dcec8).
