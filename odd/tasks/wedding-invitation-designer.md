@@ -69,3 +69,9 @@ Out of MVP: boleta electrónica and print shop validation (print values fixed: 2
 - Story/landscape spacing tuned so the extreme fixture fits every format (renderer overflow check: 15/15 ok); visual baselines generated in mcr.microsoft.com/playwright:v1.65.0-noble.
 - High-risk slices without native review (user asked not to be asked): T7 exports (paid gate, signed URLs), T8 checkout/owner attach + migration 0001, T11 rate limits. Risk: item 1 (migration 0001), item 2 (download/ownership checks, signed URLs), item 4 (pg-boss singleton, concurrent claim).
 - Not done (outside MVP or undecided): real payment gateway adapter (design §11), boleta electrónica, print shop validation, support unlock UI for locked names.
+- Native reviews after the user's "vale la pena? hacelo": T7 approved (review-5e7b8c38b9662a50), T11 approved (review-66a3996b5015e5c0), T8+T10 web approved (review-c43dc7f9b7b09215). No blocking findings. Non-blocking follow-ups worth doing before production:
+  - Production config: fake gateway is the default (container.ts:48) — must fail closed in production; X-Forwarded-For is trusted as-is (http.ts:20) — only behind a trusted proxy.
+  - Receipt email: owner claim then send is not retry-safe; a failed send loses the access-link email (invitation-service.ts:155-160).
+  - pg-boss: a rejected bossReady is cached forever (container.ts:67-69); export failures have no logging; startWorker latch set before success.
+  - Rate limits: email key not normalized in the limiter (rate-limiter.ts:35); purgeOldWindows never scheduled.
+  - Editor: autosave race between overlapping saves, blob URL leak on unmount, duplicate field labels; download page refreshes without limit.
