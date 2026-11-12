@@ -23,7 +23,7 @@ Branch: feat/foundation. Delivery strategy: ask-on-risk → chain strategy: stac
 | T3 | S2, S3, S9, S10 | Invitations domain: reference Zod schema (https URLs), name-lock rule, edit window, content hash (TDD) | inline | done | RED 4 suites → GREEN 38 tests, commit df3942e |
 | T4 | S5, S8, S10 | Payments domain: PaymentGateway port + fake, status cache in same tx, idempotent webhook, refund (TDD + integration) | inline | done | RED→GREEN: 15 unit + 8 integration, commits 96b360f, 47b8ef8; native review approved (review-5070c3a5c77c8981), ff to main |
 | T5 | S9 | Auth: sessions, access-link tokens, email port (Resend adapter) | inline | done | RED→GREEN: 7 unit + 10 integration (incl. concurrent single-use claim); commit on pr/6-auth |
-| T6 | S4, S9, S10 | Render worker: pinned Playwright image, no network, page pool, preview + export services | inline | pending | |
+| T6 | S4, S9, S10 | Render worker: pinned Playwright image, no network, page pool, preview + export services | inline | done | RED→GREEN 9 integration tests on real Chromium (preview 1000 px, PDF/PNG/JPG/story sizes, external requests blocked, pool 503, secret, 422); branch pr/8-render |
 | T7 | S4, S9 | Export pipeline: pg-boss `exclusive` + singletonKey, exports cache, R2 adapter | inline | pending | |
 | T8 | S2, S5, S7, S10 | Editor island: shadcn form, server preview with sequence numbers | inline | pending | |
 | T9 | S2, S4 | Reference template `clasico-marco-doble/v1` | inline | done | RED→GREEN 22 tests (fixtures x formats, QR/links, crop marks, fonts inlined), commit 04b0e80 (485 lines, one unit) |
@@ -63,3 +63,4 @@ Out of MVP: boleta electrónica and print shop validation (print values fixed: 2
 - D11 Visual regression: Playwright Test `toHaveScreenshot`, maxDiffPixelRatio 0.001, snapshots under tests/visual; run inside the pinned image for stable fonts.
 - D12 E2E: fake gateway with a dev-only fake checkout page that triggers the signed fake webhook.
 - Writer subagents unavailable this session (Pi cwd is /Users/mateqac: "Writer bootstrap requires the original safe project root"); T6–T12 implemented inline.
+- Native Gentle AI review for T6–T12 not started: the user asked not to be asked anything ("no me preguntes") and review needs per-run human confirmation; high-risk slices are listed at close for an optional later review.

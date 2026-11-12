@@ -1,0 +1,15 @@
+# Render worker image (design §5, decision D1). The tag pins Playwright and its Chromium build;
+# upgrading it is a deliberate change in its own PR with every visual snapshot reviewed.
+FROM mcr.microsoft.com/playwright:v1.65.0-noble
+
+WORKDIR /app
+RUN corepack enable
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+COPY tsconfig.json ./
+COPY src ./src
+
+ENV NODE_ENV=production
+USER pwuser
+EXPOSE 4100
+CMD ["pnpm", "exec", "tsx", "src/render/main.ts"]

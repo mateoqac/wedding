@@ -15,5 +15,17 @@ services:
       timeout: 3s
       retries: 20
 
+  # Render workers (design §5): same image, two isolated services. Start with `pnpm workers:up`.
+  render-preview:
+    build: { context: ., dockerfile: Dockerfile.worker }
+    profiles: [workers]
+    environment: { RENDER_MODE: preview, WORKER_SECRET: dev-worker-secret, PORT: "4100" }
+    ports: ["4101:4100"]
+  render-export:
+    build: { context: ., dockerfile: Dockerfile.worker }
+    profiles: [workers]
+    environment: { RENDER_MODE: export, WORKER_SECRET: dev-worker-secret, PORT: "4100" }
+    ports: ["4102:4100"]
+
 volumes:
   postgres-data:
