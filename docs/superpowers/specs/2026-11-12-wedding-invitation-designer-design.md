@@ -146,12 +146,12 @@ The biggest template risk is text overflow with calligraphic fonts.
 
 | Format | Spec |
 |---|---|
-| Print PDF | Physical size, bleed, and color mode **as validated with a print shop** (see Prerequisites); crop marks, vector text, embedded fonts |
+| Print PDF | **21 x 15 cm** trim size, **3 mm bleed** per side (21.6 x 15.6 cm page), crop marks, **RGB**, vector text, embedded fonts |
 | Digital PDF | Same design without bleed; clickable links (gift registry, map) |
 | PNG/JPG | Landscape, high resolution; links rendered as QR codes |
 | Story 9:16 | 1080x1920, template-specific vertical layout; links as QR codes |
 
-Known limit: Chromium outputs **RGB PDFs only**. If the print shop requires CMYK, a Ghostscript conversion step is added to the worker.
+Known limit: Chromium outputs **RGB PDFs only**. CMYK conversion is out of the MVP (see §10).
 
 ### Export jobs
 
@@ -209,22 +209,19 @@ Known limit: Chromium outputs **RGB PDFs only**. If the print shop requires CMYK
 - **Worker isolation:** a template fixture that references an external URL must render with that request blocked.
 - **E2E (Playwright):** single happy path: pick template -> fill -> pay (fake) -> receive access link -> download all 4 formats.
 
-## 10. Prerequisites
-
-- **Electronic receipt (boleta electrónica) — blocks selling.** Sales to final consumers subject to VAT require a boleta electrónica issued to the buyer (digital delivery, e.g. email, is allowed). Refunds require an electronic credit note (nota de crédito). Must be resolved before launch, and it conditions the gateway choice: either the gateway issues the boleta, or a DTE issuing provider is integrated behind a `ReceiptIssuer` port, triggered on `approved` (boleta) and on `refunded`/`charged_back` (credit note). Requires SII business registration (inicio de actividades).
-- **Print shop validation before building the first template:** physical size, bleed, color mode (RGB vs CMYK), and accepted PDF settings. Template work is blocked on this; infrastructure, data model, and payments port can proceed in parallel.
-
-## 11. Out of scope (MVP)
+## 10. Out of scope (MVP)
 
 - Hybrid block positioning (phase 2)
 - Print ordering/fulfillment
 - Markets outside Chile
 - Payment gateway choice (pending; port only)
+- **Electronic receipt (boleta electrónica)** and credit notes on refunds. A `ReceiptIssuer` port can be added later, triggered on `approved` (boleta) and `refunded`/`charged_back` (credit note).
+- **Print shop validation** and CMYK conversion. Print values are fixed in the formats table (§5).
 
-## 12. Open items
+## 11. Open items
 
-- Electronic receipt strategy (see Prerequisites) — **blocker for selling**.
-- Payment gateway selection (depends on the receipt strategy).
+- Electronic receipt strategy.
+- Payment gateway selection.
 - Price per invitation (CLP, VAT included).
 - Hosting region verification.
 - Initial template catalog size (MVP: start with the reference "classic double frame" template).
