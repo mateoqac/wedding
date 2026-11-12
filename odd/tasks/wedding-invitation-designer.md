@@ -49,3 +49,16 @@ Out of MVP: boleta electrónica and print shop validation (print values fixed: 2
 - T5 decisions (user): session 30 d, access link 15 min single-use, edit-token cookie 30 d; tokens 32 random bytes, SHA-256 hash stored, cookies HttpOnly+Secure+SameSite=Lax; access-link email rate limit 5/h per email and 20/h per IP (enforcement in T11, T5 exposes the hook).
 - T5 slice 059c239 is 483 authored lines (~270 tests), over the 400-line target; kept as one unit because tests and code of one behavior stay together. Risk: item 2 (auth tokens and sessions).
 - T5 native review (risk, resilience, reliability) approved and acknowledged (review-571f86566ab8a4e3); pr/6-auth fast-forwarded to main. Non-blocking follow-ups: token row persists if the email send fails (auth-service.ts:53-65); email address is normalized but not format-validated (auth-service.ts:49-50) — validate at the checkout/access form boundary (T8/T10).
+- User (verbatim): "si, vos termina todo, no me preguntes. cuando ya este, lo pruebo" — finish T6–T12 autonomously; open values chosen by the agent (D1–D12 below).
+- D1 Renderer: playwright 1.65.0 pinned exactly in package.json; worker image `mcr.microsoft.com/playwright:v1.65.0-noble`. Fonts: @fontsource cormorant-garamond, playfair-display, great-vibes (OFL), inlined as base64 @font-face; every non-`data:`/`about:` request is aborted.
+- D2 Pool: 4 pages per service, wait queue 8, then 503 + `Retry-After: 2`; editor backoff 0.5/1/2/4 s; render timeout 15 s. Internal auth header `x-worker-secret` (env WORKER_SECRET).
+- D3 Preview: JPEG, long side 1000 px, quality 70, diagonal repeated watermark "VISTA PREVIA" opacity 0.18; in-memory LRU cache (200 entries) keyed by content hash.
+- D4 Formats: print PDF 21.6x15.6 cm page (3 mm bleed) with crop marks; digital PDF 21x15 cm with clickable links; PNG/JPG 2480x1772 px (300 dpi); Story 1080x1920 own vertical layout; QR codes (EC level M) for links in raster formats and print PDF.
+- D5 Options shape: { font: "cormorant"|"playfair"|"great-vibes", color: "oro"|"azul-noche"|"verde-salvia", emblem: "anillos"|"ninguno", frame: "doble"|"simple" }.
+- D6 Storage: port + local filesystem adapter (dev/tests) + R2 adapter via @aws-sdk/client-s3; keys `exports/<invitationId>/<format>-<contentHash>.<ext>`; signed URL TTL 5 min.
+- D7 pg-boss: queue `export`, policy exclusive, singletonKey `<invitation_id>:<format>:<content_hash>`, retryLimit 2 (3 attempts), retryDelay 10 s with backoff, expire 2 min. Cron `cleanup-drafts` daily 03:00 America/Santiago deletes anonymous drafts inactive 30 days.
+- D8 Rate limits (fixed 1 h window): access-link 5/email + 20/IP; draft creation 20/IP; preview renders 600/draft; export enqueues 30/invitation.
+- D9 Price: 9.990 CLP via env PRICE_CLP (default 9990).
+- D10 Dev email: file outbox adapter when RESEND_API_KEY is absent (EMAIL_OUTBOX_DIR), used by E2E to read the access link.
+- D11 Visual regression: Playwright Test `toHaveScreenshot`, maxDiffPixelRatio 0.001, snapshots under tests/visual; run inside the pinned image for stable fonts.
+- D12 E2E: fake gateway with a dev-only fake checkout page that triggers the signed fake webhook.
