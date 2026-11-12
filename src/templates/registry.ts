@@ -1,4 +1,14 @@
+import type { ComponentType } from "react";
+import type { z } from "zod";
+import type { Format } from "@/invitations/formats";
 import { extractFacts as clasicoMarcoDobleV1Facts } from "./clasico-marco-doble/v1/facts";
+import { fixtures as clasicoFixtures } from "./clasico-marco-doble/v1/fixtures";
+import { fontFaceCss as clasicoFontFaceCss } from "./clasico-marco-doble/v1/fonts";
+import { formats as clasicoFormats, type FormatGeometry } from "./clasico-marco-doble/v1/formats";
+import { meta as clasicoMeta } from "./clasico-marco-doble/v1/meta";
+import { defaultOptions as clasicoDefaults, optionsSchema as clasicoOptions } from "./clasico-marco-doble/v1/options";
+import { invitationDataSchema as clasicoData } from "./clasico-marco-doble/v1/schema";
+import { Template as ClasicoTemplate } from "./clasico-marco-doble/v1/Template";
 
 /** Template-independent facts the domain needs from an invitation's data. */
 export interface InvitationFacts {
@@ -7,18 +17,61 @@ export interface InvitationFacts {
   weddingDate: string;
 }
 
-type FactsExtractor = (data: unknown) => InvitationFacts;
+export interface TemplateModule {
+  meta: { id: string; version: number; name: string; description: string };
+  // biome-ignore lint: template-specific data shape
+  dataSchema: z.ZodType<any>;
+  // biome-ignore lint: template-specific options shape
+  optionsSchema: z.ZodType<any>;
+  defaultOptions: Record<string, string>;
+  formats: Record<Format, FormatGeometry>;
+  // biome-ignore lint: props validated by the template schemas
+  Component: ComponentType<any>;
+  fontFaceCss(font: string): string;
+  fixtures: Record<string, unknown>;
+  facts(data: unknown): InvitationFacts;
+  /** Link URLs that need QR codes in raster/print formats. */
+  links(data: unknown): string[];
+}
 
-const FACTS: Record<string, Record<number, FactsExtractor>> = {
-  "clasico-marco-doble": { 1: clasicoMarcoDobleV1Facts },
+const TEMPLATES: Record<string, Record<number, TemplateModule>> = {
+  "clasico-marco-doble": {
+    1: {
+      meta: clasicoMeta,
+      dataSchema: clasicoData,
+      optionsSchema: clasicoOptions,
+      defaultOptions: clasicoDefaults,
+      formats: clasicoFormats,
+      Component: ClasicoTemplate,
+      fontFaceCss: (font) => clasicoFontFaceCss(font as never),
+      fixtures: clasicoFixtures,
+      facts: clasicoMarcoDobleV1Facts,
+      links: (data) => {
+        const d = clasicoData.parse(data);
+        return [d.venueMapUrl, d.giftRegistry?.url].filter((l): l is string => !!l);
+      },
+    },
+  },
 };
+
+export function getTemplate(templateId: string, templateVersion: number): TemplateModule {
+  const template = TEMPLATES[templateId]?.[templateVersion];
+  if (!template) throw new Error(`Unknown template ${templateId} v${templateVersion}`);
+  return template;
+}
+
+/** Latest version of every template, for the gallery. */
+export function listTemplates(): TemplateModule[] {
+  return Object.values(TEMPLATES).map((versions) => {
+    const latest = Math.max(...Object.keys(versions).map(Number));
+    return versions[latest];
+  });
+}
 
 export function getInvitationFacts(
   templateId: string,
   templateVersion: number,
   data: unknown,
 ): InvitationFacts {
-  const extract = FACTS[templateId]?.[templateVersion];
-  if (!extract) throw new Error(`Unknown template ${templateId} v${templateVersion}`);
-  return extract(data);
+  return getTemplate(templateId, templateVersion).facts(data);
 }
