@@ -1,0 +1,45 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/layouts/SiteHeader.astro";
+import { getContainer } from "@/server/container";
+import { accessFor } from "@/server/http";
+
+const id = Astro.params.id as string;
+const invitation = await getContainer().invitations.load(id, accessFor(Astro.cookies, id, Astro.locals.user?.id));
+if (!invitation) return Astro.redirect("/acceso?error=no_access");
+if (invitation.status !== "paid") return Astro.redirect(`/invitaciones/${id}/pagar`);
+
+const formats = [
+  { id: "print-pdf", name: "PDF para imprenta", text: "21 x 15 cm con 3 mm de sangrado y marcas de corte." },
+  { id: "digital-pdf", name: "PDF digital", text: "Para enviar por email o WhatsApp, con enlaces clicables." },
+  { id: "png", name: "Imagen PNG", text: "Alta resolución, enlaces como códigos QR." },
+  { id: "jpg", name: "Imagen JPG", text: "Alta resolución, más liviana." },
+  { id: "story", name: "Historia 9:16", text: "1080 x 1920 para Instagram o estados de WhatsApp." },
+];
+const justPaid = Astro.url.searchParams.has("pagado");
+---
+
+<BaseLayout title="Descargas — Partes de matrimonio">
+  <SiteHeader user={Astro.locals.user} />
+  <main class="mx-auto max-w-3xl px-4 py-12">
+    {justPaid && <p role="status" class="mb-6 rounded-md border p-3 text-sm">¡Pago confirmado! Te enviamos un email con el recibo y tu enlace de acceso.</p>}
+    <h1 class="text-2xl font-semibold">Descarga tu invitación</h1>
+    <ul class="mt-6 grid gap-4">
+      {formats.map((format) => (
+        <li class="flex items-center justify-between gap-4 rounded-lg border p-4">
+          <div>
+            <h2 class="font-medium">{format.name}</h2>
+            <p class="text-sm text-muted-foreground">{format.text}</p>
+          </div>
+          <a
+            href={`/invitaciones/${id}/descargar/${format.id}`}
+            class="inline-flex h-10 shrink-0 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            Descargar
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="mt-8 text-sm"><a href={`/editor/${id}`} class="underline">Editar la invitación</a></p>
+  </main>
+</BaseLayout>

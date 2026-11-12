@@ -3,6 +3,13 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, normalize, sep } from "node:path";
 import { SIGNED_URL_TTL_SECONDS, type FileStorage } from "./storage";
 
+export interface LocalStorage extends FileStorage {
+  /** Returns the file only for a valid, unexpired signature. */
+  read(key: string, expires: string, signature: string): Promise<Buffer | null>;
+}
+
+export const isLocalStorage = (storage: FileStorage): storage is LocalStorage => "read" in storage;
+
 /** Filesystem storage for development and tests; URLs are HMAC-signed like R2's presigned URLs. */
 export function createLocalStorage({
   directory,
@@ -14,7 +21,7 @@ export function createLocalStorage({
   signingSecret: string;
   baseUrl: string;
   now?: () => Date;
-}): FileStorage & { read(key: string, expires: string, signature: string): Promise<Buffer | null> } {
+}): LocalStorage {
   const sign = (key: string, expires: string) =>
     createHmac("sha256", signingSecret).update(`${key}:${expires}`).digest("hex");
 

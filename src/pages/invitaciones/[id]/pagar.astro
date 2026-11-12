@@ -1,0 +1,53 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/layouts/SiteHeader.astro";
+import { formatClp } from "@/lib/money";
+import { getContainer } from "@/server/container";
+import { accessFor } from "@/server/http";
+
+const id = Astro.params.id as string;
+const container = getContainer();
+const invitation = await container.invitations.load(id, accessFor(Astro.cookies, id, Astro.locals.user?.id));
+if (!invitation) return Astro.redirect("/acceso?error=no_access");
+if (invitation.status === "paid") return Astro.redirect(`/invitaciones/${id}/descargas`);
+const complete = container.invitations.isComplete(invitation);
+
+const ERRORS: Record<string, string> = {
+  invalid_email: "Revisa el email: lo necesitamos para enviarte el recibo y tu enlace de acceso.",
+  incomplete: "Faltan datos obligatorios en tu invitación. Vuelve al editor para completarlos.",
+  payment_pending: "Tu pago aún no se confirma. Si ya pagaste, espera unos minutos y recarga esta página.",
+};
+const error = ERRORS[Astro.url.searchParams.get("error") ?? ""];
+---
+
+<BaseLayout title="Pagar — Partes de matrimonio">
+  <SiteHeader user={Astro.locals.user} />
+  <main class="mx-auto max-w-lg px-4 py-12">
+    <h1 class="text-2xl font-semibold">Desbloquea tu invitación</h1>
+    <p class="mt-2 text-muted-foreground">
+      Un pago único de <strong>{formatClp(container.priceClp)}</strong> desbloquea todos los formatos: PDF para imprenta,
+      PDF digital, PNG, JPG e historia 9:16.
+    </p>
+    {error && <p role="alert" class="mt-4 rounded-md border border-destructive p-3 text-sm text-destructive">{error}</p>}
+    {complete ? (
+      <form method="post" action="/api/checkout" class="mt-8 grid gap-4">
+        <input type="hidden" name="invitationId" value={id} />
+        <label class="grid gap-1.5 text-sm font-medium">
+          Email
+          <input
+            type="email"
+            name="email"
+            required
+            autocomplete="email"
+            value={Astro.locals.user?.email ?? ""}
+            class="h-10 rounded-md border px-3 font-normal"
+          />
+          <span class="font-normal text-muted-foreground">Te enviaremos el recibo y un enlace para volver a tu invitación desde cualquier dispositivo.</span>
+        </label>
+        <button class="h-11 rounded-md bg-primary font-medium text-primary-foreground hover:bg-primary/90">Pagar {formatClp(container.priceClp)}</button>
+      </form>
+    ) : (
+      <a href={`/editor/${id}`} class="mt-8 inline-block underline">Volver al editor</a>
+    )}
+  </main>
+</BaseLayout>

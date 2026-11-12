@@ -1,0 +1,27 @@
+---
+import type { SessionUser } from "@/auth/auth-service";
+
+interface Props {
+  user: SessionUser | null;
+}
+const { user } = Astro.props;
+---
+
+<header class="border-b">
+  <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3" aria-label="Principal">
+    <a href="/" class="font-semibold">Partes de matrimonio</a>
+    <div class="flex items-center gap-4 text-sm">
+      <a href="/plantillas" class="hover:underline">Plantillas</a>
+      {user ? (
+        <>
+          <a href="/mis-invitaciones" class="hover:underline">Mis invitaciones</a>
+          <form method="post" action="/api/auth/sign-out">
+            <button class="hover:underline">Salir</button>
+          </form>
+        </>
+      ) : (
+        <a href="/acceso" class="hover:underline">Acceder</a>
+      )}
+    </div>
+  </nav>
+</header>

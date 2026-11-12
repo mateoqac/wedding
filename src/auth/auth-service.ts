@@ -25,7 +25,8 @@ export interface SessionUser {
 export type AllowAccessLinkEmail = (input: { email: string; ip: string }) => Promise<boolean>;
 
 export interface AuthService {
-  requestAccessLink(input: { email: string; ip: string }): Promise<AccessLinkRequestResult>;
+  /** `system: true` is for receipts sent by the server itself; it skips the per-user rate limit. */
+  requestAccessLink(input: { email: string; ip: string; system?: boolean }): Promise<AccessLinkRequestResult>;
   consumeAccessLink(token: string): Promise<ConsumeAccessLinkResult>;
   getSessionUser(sessionToken: string): Promise<SessionUser | null>;
   signOut(sessionToken: string): Promise<void>;
@@ -47,7 +48,7 @@ export function createAuthService({
   return {
     async requestAccessLink(input) {
       const address = normalizeEmail(input.email);
-      if (!(await allowAccessLinkEmail({ email: address, ip: input.ip }))) return "rate_limited";
+      if (!input.system && !(await allowAccessLinkEmail({ email: address, ip: input.ip }))) return "rate_limited";
 
       const token = generateToken();
       await db.insert(magicLinkTokens).values({

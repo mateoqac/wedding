@@ -1,17 +1,44 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { Button } from "@/components/ui/button";
+import SiteHeader from "@/layouts/SiteHeader.astro";
+import { formatClp } from "@/lib/money";
+import { getContainer } from "@/server/container";
+
+const price = formatClp(getContainer().priceClp);
+const steps = [
+  { title: "Elige una plantilla", text: "Diseños formales pensados para partes de matrimonio en Chile." },
+  { title: "Completa los datos", text: "Ves la vista previa al instante, con marca de agua, sin crear cuenta." },
+  { title: "Paga una vez", text: `${price} desbloquean todos los formatos de tu invitación.` },
+  { title: "Descarga y comparte", text: "PDF para imprenta, PDF digital, imagen y formato historia para Instagram." },
+];
 ---
 
 <BaseLayout
-  title="Partes de matrimonio"
+  title="Partes de matrimonio — diseña y descarga tu invitación"
   description="Diseña tu parte de matrimonio en minutos y descárgalo listo para imprimir o compartir."
 >
-  <main class="mx-auto flex max-w-2xl flex-col items-center gap-6 px-4 py-24 text-center">
-    <h1 class="text-4xl font-semibold tracking-tight">Diseña tu parte de matrimonio</h1>
-    <p class="text-muted-foreground">
-      Elige una plantilla, completa los datos y descárgalo para imprenta, WhatsApp o Instagram.
-    </p>
-    <Button>Comenzar</Button>
+  <SiteHeader user={Astro.locals.user} />
+  <main>
+    <section class="mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 py-20 text-center">
+      <h1 class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Tu parte de matrimonio, listo para imprenta y WhatsApp</h1>
+      <p class="max-w-xl text-lg text-muted-foreground text-pretty">
+        Elige una plantilla clásica, completa los datos y descárgalo en todos los formatos con un solo pago de {price}.
+      </p>
+      <a href="/plantillas" class="inline-flex h-11 items-center rounded-md bg-primary px-6 font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2">
+        Ver plantillas
+      </a>
+    </section>
+    <section class="mx-auto max-w-5xl px-4 pb-24" aria-labelledby="como-funciona">
+      <h2 id="como-funciona" class="mb-8 text-center text-2xl font-semibold">Cómo funciona</h2>
+      <ol class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {steps.map((step, i) => (
+          <li class="rounded-lg border p-5">
+            <span class="text-sm font-semibold text-muted-foreground">Paso {i + 1}</span>
+            <h3 class="mt-1 font-semibold">{step.title}</h3>
+            <p class="mt-2 text-sm text-muted-foreground">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
   </main>
 </BaseLayout>

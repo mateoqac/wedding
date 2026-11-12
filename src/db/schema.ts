@@ -74,6 +74,8 @@ export const invitations = pgTable(
     namesUnlockedAt: timestamp("names_unlocked_at", { withTimezone: true }),
     namesUnlockReason: text("names_unlock_reason"),
     editWindowEndsAt: timestamp("edit_window_ends_at", { withTimezone: true }),
+    // Email typed in the checkout form; becomes the owner once the payment is approved (design §3).
+    checkoutEmail: text("checkout_email"),
     lastActivityAt: timestamp("last_activity_at", { withTimezone: true }).notNull().defaultNow(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),

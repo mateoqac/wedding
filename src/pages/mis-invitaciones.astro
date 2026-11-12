@@ -1,0 +1,39 @@
+---
+import { desc, eq } from "drizzle-orm";
+import { invitations } from "@/db/schema";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/layouts/SiteHeader.astro";
+import { getContainer } from "@/server/container";
+import { getTemplate } from "@/templates/registry";
+
+const user = Astro.locals.user;
+if (!user) return Astro.redirect("/acceso");
+const rows = await getContainer()
+  .db.select()
+  .from(invitations)
+  .where(eq(invitations.userId, user.id))
+  .orderBy(desc(invitations.updatedAt));
+const coupleOf = (row: (typeof rows)[number]) => getTemplate(row.templateId, row.templateVersion).facts(row.data).coupleNames.join(" y ");
+---
+
+<BaseLayout title="Mis invitaciones — Partes de matrimonio">
+  <SiteHeader user={user} />
+  <main class="mx-auto max-w-3xl px-4 py-12">
+    <h1 class="text-2xl font-semibold">Mis invitaciones</h1>
+    {rows.length === 0 ? (
+      <p class="mt-6 text-muted-foreground">Aún no tienes invitaciones pagadas con {user.email}. <a href="/plantillas" class="underline">Crea una</a>.</p>
+    ) : (
+      <ul class="mt-6 grid gap-4">
+        {rows.map((row) => (
+          <li class="flex items-center justify-between gap-4 rounded-lg border p-4">
+            <span class="font-medium">{coupleOf(row)}</span>
+            <span class="flex gap-4 text-sm">
+              <a href={`/editor/${row.id}`} class="underline">Editar</a>
+              <a href={`/invitaciones/${row.id}/descargas`} class="underline">Descargar</a>
+            </span>
+          </li>
+        ))}
+      </ul>
+    )}
+  </main>
+</BaseLayout>

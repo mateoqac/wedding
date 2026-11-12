@@ -1,0 +1,39 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/layouts/SiteHeader.astro";
+import { listTemplates } from "@/templates/registry";
+
+const templates = listTemplates();
+---
+
+<BaseLayout title="Plantillas — Partes de matrimonio" description="Elige la plantilla de tu parte de matrimonio.">
+  <SiteHeader user={Astro.locals.user} />
+  <main class="mx-auto max-w-6xl px-4 py-12">
+    <h1 class="text-3xl font-semibold">Elige una plantilla</h1>
+    <p class="mt-2 text-muted-foreground">Podrás cambiar tipografía, color, emblema y marco en el editor.</p>
+    <ul class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {templates.map((template) => (
+        <li class="flex flex-col overflow-hidden rounded-lg border">
+          <img
+            src={`/api/templates/${template.meta.id}/thumbnail`}
+            alt={`Ejemplo de la plantilla ${template.meta.name}`}
+            width="1000"
+            height="714"
+            loading="lazy"
+            class="aspect-[1000/714] w-full bg-muted object-cover"
+          />
+          <div class="flex flex-1 flex-col gap-3 p-4">
+            <h2 class="font-semibold">{template.meta.name}</h2>
+            <p class="flex-1 text-sm text-muted-foreground">{template.meta.description}</p>
+            <form method="post" action="/api/invitations">
+              <input type="hidden" name="templateId" value={template.meta.id} />
+              <button class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 font-medium text-primary-foreground hover:bg-primary/90">
+                Usar esta plantilla
+              </button>
+            </form>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </main>
+</BaseLayout>

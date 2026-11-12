@@ -84,6 +84,18 @@ describe("access link", () => {
     expect(await testDb.db.select().from(magicLinkTokens)).toHaveLength(0);
   });
 
+  it("skips the rate limit hook for system receipts", async () => {
+    auth = createAuthService({
+      db: testDb.db,
+      email,
+      baseUrl: "https://partes.example",
+      now: () => clock,
+      allowAccessLinkEmail: async () => false,
+    });
+    expect(await auth.requestAccessLink({ email: "ana@example.cl", ip: "server", system: true })).toBe("sent");
+    expect(email.sent).toHaveLength(1);
+  });
+
   it("consumes a valid link once, creating the user and a 30-day session", async () => {
     await auth.requestAccessLink({ email: "ana@example.cl", ip: "1.2.3.4" });
     const token = tokenFromLastEmail();

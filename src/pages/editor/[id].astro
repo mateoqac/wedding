@@ -1,0 +1,27 @@
+---
+import Editor from "@/editor/Editor";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/layouts/SiteHeader.astro";
+import { getContainer } from "@/server/container";
+import { accessFor } from "@/server/http";
+import { getTemplate } from "@/templates/registry";
+
+const id = Astro.params.id as string;
+const invitation = await getContainer().invitations.load(id, accessFor(Astro.cookies, id, Astro.locals.user?.id));
+if (!invitation) return Astro.redirect("/acceso?error=no_access");
+const template = getTemplate(invitation.templateId, invitation.templateVersion);
+---
+
+<BaseLayout title={`Editor — ${template.meta.name}`}>
+  <SiteHeader user={Astro.locals.user} />
+  <main class="mx-auto max-w-7xl px-4 py-8">
+    <h1 class="mb-6 text-2xl font-semibold">Completa tu invitación</h1>
+    <Editor
+      client:load
+      invitationId={invitation.id}
+      initialData={invitation.data}
+      initialOptions={invitation.options as never}
+      paid={invitation.status === "paid"}
+    />
+  </main>
+</BaseLayout>

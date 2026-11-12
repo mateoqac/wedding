@@ -1,0 +1,35 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/layouts/SiteHeader.astro";
+
+const ERRORS: Record<string, string> = {
+  expired: "El enlace venció (dura 15 minutos). Pide uno nuevo.",
+  used: "Ese enlace ya se usó. Pide uno nuevo.",
+  invalid: "El enlace no es válido. Pide uno nuevo.",
+  invalid_email: "Ingresa un email válido.",
+  rate_limited: "Pediste muchos enlaces. Intenta de nuevo en una hora.",
+  no_access: "Para ver esa invitación, entra con el email que usaste al pagar.",
+};
+const error = ERRORS[Astro.url.searchParams.get("error") ?? ""];
+const sent = Astro.url.searchParams.has("enviado");
+---
+
+<BaseLayout title="Acceder — Partes de matrimonio">
+  <SiteHeader user={Astro.locals.user} />
+  <main class="mx-auto max-w-md px-4 py-12">
+    <h1 class="text-2xl font-semibold">Accede a tus invitaciones</h1>
+    <p class="mt-2 text-muted-foreground">Te enviaremos un enlace de acceso al email que usaste al pagar.</p>
+    {error && <p role="alert" class="mt-4 rounded-md border border-destructive p-3 text-sm text-destructive">{error}</p>}
+    {sent ? (
+      <p role="status" class="mt-6 rounded-md border p-3 text-sm">Si el email tiene invitaciones, te llegará un enlace en unos minutos. Revisa también la carpeta de spam.</p>
+    ) : (
+      <form method="post" action="/api/auth/access-link" class="mt-6 grid gap-4">
+        <label class="grid gap-1.5 text-sm font-medium">
+          Email
+          <input type="email" name="email" required autocomplete="email" class="h-10 rounded-md border px-3 font-normal" />
+        </label>
+        <button class="h-11 rounded-md bg-primary font-medium text-primary-foreground hover:bg-primary/90">Enviar enlace</button>
+      </form>
+    )}
+  </main>
+</BaseLayout>
