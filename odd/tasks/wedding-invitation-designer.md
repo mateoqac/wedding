@@ -18,7 +18,7 @@ Branch: feat/foundation. Delivery strategy: ask-on-risk. Test runner: Vitest (un
 
 | ID | Specs | Task | Route | Status | Evidence |
 |---|---|---|---|---|---|
-| T1 | S6, S7 | Scaffold: Astro SSR (Node) + React + Tailwind + shadcn/ui + TS + Vitest, screaming folders | inline | pending | |
+| T1 | S6, S7 | Scaffold: Astro SSR (Node) + React + Tailwind + shadcn/ui + TS + Vitest, screaming folders | inline | done | check 0 errors, build ok, landing ships 0 scripts |
 | T2 | S6, S9, S10 | Postgres via docker compose + Drizzle schema for all tables + first migration | inline | pending | |
 | T3 | S2, S3, S9, S10 | Invitations domain: reference Zod schema (https URLs), name-lock rule, edit window, content hash (TDD) | inline | pending | |
 | T4 | S5, S8, S10 | Payments domain: PaymentGateway port + fake, status cache in same tx, idempotent webhook, refund (TDD + integration) | inline | pending | |
@@ -40,3 +40,4 @@ Out of MVP: boleta electrónica and print shop validation (print values fixed: 2
 - L3 (2026-11-12): `writing-plans` skill unavailable; this document is the plan. Engram mirror pending (mem_save returned ambiguous_project with unrelated candidates). Docker daemon not running at start; T2 needs it.
 - L4: Forecast well above 400 authored lines; chain strategy to be asked once before the next commit after the threshold.
 - L5 (2026-11-12): "eliminar la sección de prerrequisitos, pasar ambos puntos a “fuera del MVP”, fijar esos valores en la tabla de formatos y quitar “bloquea la venta” de los pendientes." Applied: print PDF fixed at 21x15 cm, 3 mm bleed, RGB; T9 unblocked.
+- L6 (2026-11-12): T1 done. Astro 7.4 requires Node >=22.23.4 → pinned 22.23.5 in `.node-version` (fnm). `astro check` rejects TypeScript 7 → pinned TypeScript 6. shadcn initialized with Base UI (`-b base`), not Radix. `astro add` wrote `minimumReleaseAgeExclude` entries to `pnpm-workspace.yaml` (pnpm supply-chain age policy bypass for fresh Astro packages); kept to allow install, flagged to the user.
