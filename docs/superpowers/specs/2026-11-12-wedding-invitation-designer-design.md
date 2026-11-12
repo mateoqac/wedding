@@ -1,7 +1,7 @@
 # Wedding Invitation Designer — Design
 
 Date: 2026-11-12
-Status: Approved in brainstorming; revised after written-spec review (rev 2)
+Status: Approved in brainstorming; revised after written-spec review (rev 3)
 
 ## 1. Product
 
@@ -16,7 +16,10 @@ Reference design: classic Chilean formal invitation (double frame, centered reli
   - Hybrid mode (manual block position/size tuning) is **phase 2**. The data model must allow adding it later without rework.
 - **Monetization:** free preview with watermark. **One payment per invitation unlocks all formats.**
 - **Post-payment edits (anti-reuse rule):**
-  - Couple names are **locked** after payment, except typo fixes: each name may change by at most **2 characters** (Levenshtein distance against the paid value).
+  - Couple names are **locked** after payment, except typo fixes and added/removed given names, compared **word by word** against the paid value:
+  - each original word must still be present with a Levenshtein distance ≤ `floor(word_length / 4)` (words of 3 letters or fewer must match exactly: "Ana" → "Eva" is rejected);
+  - at most **one word** may be added or removed per name ("María" → "María José" is allowed);
+  - support can **manually unlock** names for an invitation; every unlock is recorded (who, when, reason).
   - All other fields stay editable within an **edit window**: until the wedding date + 30 days, capped at 18 months from payment.
   - After the window closes, already generated files remain downloadable; no new edits.
 - **Payment gateway:** undecided (candidates: Flow, Mercado Pago, Transbank Webpay). Isolated behind a `PaymentGateway` port.
@@ -82,7 +85,10 @@ Clean design bytes never reach the browser before payment, **in any format**.
 - A client-side DOM preview is rejected for every format, including print: the landscape print layout is visually the same product as the landscape PNG, so a screenshot of a clean DOM would leak a shareable final.
 - The editor sends the draft (debounced ~500 ms) to the worker's internal preview endpoint, which returns a low-resolution JPEG (~1000 px on the long side) with the watermark burned in.
 - The editor shows the previous image with a loading indicator until the new one arrives.
-- The worker keeps a warm Chromium instance to keep preview latency low.
+- **Stale responses are discarded:** every preview request carries an increasing sequence number; the editor renders a response only if its number is the latest sent, and aborts superseded in-flight requests (`AbortController`).
+- **Preview cache:** identical input (same content hash) returns the last rendered preview without launching Chromium.
+- **Isolation instead of priority:** previews and exports run as **two separate services built from the same worker image**. Preview load from anonymous users can never delay paid exports, and each service scales independently.
+- **Concurrency limit:** each service holds a bounded pool of Chromium pages (configurable, e.g. 4). When the pool and its short wait queue are full, the preview service answers `503` + `Retry-After` and the editor retries with backoff.
 - Tradeoff accepted: preview is not instant (target < 1.5 s p95) in exchange for no leakage via DOM inspection.
 
 ## 4. Data model
@@ -92,7 +98,7 @@ Clean design bytes never reach the browser before payment, **in any format**.
 | `users` | `id`, `email` (unique), `created_at` |
 | `sessions` | `id_hash`, `user_id`, `expires_at`, `created_at` |
 | `magic_link_tokens` | `token_hash`, `email`, `expires_at`, `used_at` |
-| `invitations` | `id` (uuid), `user_id` (nullable while anonymous), `edit_token_hash`, `template_id`, `template_version`, `data` (jsonb), `options` (jsonb: font/color/emblem/frame), `status` (`draft`/`paid`), `paid_couple_names` (jsonb, set on payment), `edit_window_ends_at`, `last_activity_at`, timestamps |
+| `invitations` | `id` (uuid), `user_id` (nullable while anonymous), `edit_token_hash`, `template_id`, `template_version`, `data` (jsonb), `options` (jsonb: font/color/emblem/frame), `status` (`draft`/`paid`, cached; see below), `paid_couple_names` (jsonb, set on payment), `names_unlocked_by`, `names_unlocked_at`, `names_unlock_reason`, `edit_window_ends_at`, `last_activity_at`, timestamps |
 | `payments` | `id`, `invitation_id`, `provider`, `provider_ref` (**unique**), `amount_clp` (integer), `status` (`pending`/`approved`/`rejected`/`refunded`/`charged_back`), `raw_payload` (jsonb), timestamps |
 | `exports` | `id`, `invitation_id`, `format`, `content_hash`, `r2_key`, `created_at`; **unique** `(invitation_id, format, content_hash)` |
 | `rate_limits` | `key`, `window_start`, `count` |
@@ -102,7 +108,7 @@ Clean design bytes never reach the browser before payment, **in any format**.
 - `provider_ref` uniqueness makes webhook handling idempotent.
 - CLP amounts are integers.
 - `content_hash = hash(template_id, template_version, format, data, options)`. Any change to any of them produces a new export.
-- Invitation `paid` is derived from payments: at least one `approved` payment not later `refunded`/`charged_back`. A refund or chargeback returns the invitation to `draft` (watermarked previews only, downloads blocked).
+- **Single source of truth for payment status: the `payments` table.** `invitations.status` is a **cache** for fast authorization checks, written **only** by the payment domain service, **in the same transaction** as the payment status change. Rule: `paid` if at least one payment is `approved` and not later `refunded`/`charged_back`; otherwise `draft`. A refund or chargeback returns the invitation to `draft` (watermarked previews only, downloads blocked). An integration test asserts the cache always matches the derivation.
 
 ## 5. Templates and export
 
@@ -127,6 +133,7 @@ templates/<template-id>/
 - Each version is an **immutable directory**. A visual change creates `vN+1/`; existing directories are never edited.
 - New drafts use the latest version. Existing invitations keep their `template_version` forever.
 - Enforcement: visual regression snapshots of every published version must stay unchanged in CI.
+- **Renderer pinning:** immutability also depends on the browser. The worker image is built from the official Playwright Docker image at an **exact version tag**, which fixes the Chromium build; fonts are bundled in the image. Upgrading Playwright/Chromium is a deliberate change in its own PR, with every snapshot diff reviewed before merging.
 
 ### Text fitting
 
@@ -188,24 +195,23 @@ Known limit: Chromium outputs **RGB PDFs only**. If the print shop requires CMYK
 | Preview failure | Editor keeps the last good image and shows a retry action |
 | Invalid data | Same Zod schema on editor (inline errors) and server (authoritative) |
 | Text overflow | Inline field error reported by the renderer |
-| Locked name edit beyond 2 chars | Server rejects; editor explains the rule |
+| Locked name edit outside the rule | Server rejects; editor explains the rule and offers contacting support |
 | Mistyped email at checkout | Edit-token cookie keeps access on the original device; support can resend by payment reference |
 | Expired/used access link | Clear message and resend action |
 
 ## 9. Testing
 
-- **Unit (Vitest):** Zod schemas (including `https`-only URLs), domain rules (`draft -> paid`, refund back to `draft`, name lock with distance ≤ 2, edit window), content hash.
+- **Unit (Vitest):** Zod schemas (including `https`-only URLs), domain rules (`draft -> paid`, refund back to `draft`, name lock per word (proportional distance, one word added/removed, "Ana" → "Eva" rejected, "María" → "María José" allowed), edit window), content hash.
 - **Integration (Vitest + real Postgres in Docker):** idempotent webhook, payment reconciliation, refund handling, export dedup with `singletonKey`, draft TTL cleanup, Drizzle repositories. Gateway replaced by a **fake implementing the port**.
-- **Visual regression (Playwright):** snapshots per template version x format with fixed fixtures:
-  - very long names and addresses,
-  - all optional fields empty,
-  - all optional fields filled,
-  - `ñ`, accented vowels, `ü`, and apostrophes in **every** font option.
+- **Visual regression (Playwright),** kept bounded instead of a full version × format × fixture × font matrix:
+  - **Layout matrix:** template version × format × 3 fixtures (very long names/addresses, all optional fields empty, all optional fields filled), using the template's default font only.
+  - **Font specimen sheet:** one snapshot per font option with `ñ`, accented vowels, `ü`, apostrophes, and the long-names fixture in the print format, to catch overflow in calligraphic fonts.
 - **Worker isolation:** a template fixture that references an external URL must render with that request blocked.
 - **E2E (Playwright):** single happy path: pick template -> fill -> pay (fake) -> receive access link -> download all 4 formats.
 
 ## 10. Prerequisites
 
+- **Electronic receipt (boleta electrónica) — blocks selling.** Sales to final consumers subject to VAT require a boleta electrónica issued to the buyer (digital delivery, e.g. email, is allowed). Refunds require an electronic credit note (nota de crédito). Must be resolved before launch, and it conditions the gateway choice: either the gateway issues the boleta, or a DTE issuing provider is integrated behind a `ReceiptIssuer` port, triggered on `approved` (boleta) and on `refunded`/`charged_back` (credit note). Requires SII business registration (inicio de actividades).
 - **Print shop validation before building the first template:** physical size, bleed, color mode (RGB vs CMYK), and accepted PDF settings. Template work is blocked on this; infrastructure, data model, and payments port can proceed in parallel.
 
 ## 11. Out of scope (MVP)
@@ -217,6 +223,8 @@ Known limit: Chromium outputs **RGB PDFs only**. If the print shop requires CMYK
 
 ## 12. Open items
 
-- Payment gateway selection.
+- Electronic receipt strategy (see Prerequisites) — **blocker for selling**.
+- Payment gateway selection (depends on the receipt strategy).
+- Price per invitation (CLP, VAT included).
 - Hosting region verification.
 - Initial template catalog size (MVP: start with the reference "classic double frame" template).
