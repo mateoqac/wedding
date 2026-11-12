@@ -26,7 +26,7 @@ Branch: feat/foundation. Delivery strategy: ask-on-risk → chain strategy: stac
 | T6 | S4, S9, S10 | Render worker: pinned Playwright image, no network, page pool, preview + export services | inline | pending | |
 | T7 | S4, S9 | Export pipeline: pg-boss `exclusive` + singletonKey, exports cache, R2 adapter | inline | pending | |
 | T8 | S2, S5, S7, S10 | Editor island: shadcn form, server preview with sequence numbers | inline | pending | |
-| T9 | S2, S4 | Reference template `clasico-marco-doble/v1` | inline | pending | |
+| T9 | S2, S4 | Reference template `clasico-marco-doble/v1` | inline | done | RED→GREEN 22 tests (fixtures x formats, QR/links, crop marks, fonts inlined), commit 04b0e80 (485 lines, one unit) |
 | T10 | S1, S5, S7 | Pages: landing, gallery, checkout | inline | pending | |
 | T11 | S9 | Rate limits + draft TTL cron | inline | pending | |
 | T12 | S4, S9, S10 | Visual regression (layout matrix + font specimens) + E2E happy path | inline | pending | |
@@ -62,3 +62,4 @@ Out of MVP: boleta electrónica and print shop validation (print values fixed: 2
 - D10 Dev email: file outbox adapter when RESEND_API_KEY is absent (EMAIL_OUTBOX_DIR), used by E2E to read the access link.
 - D11 Visual regression: Playwright Test `toHaveScreenshot`, maxDiffPixelRatio 0.001, snapshots under tests/visual; run inside the pinned image for stable fonts.
 - D12 E2E: fake gateway with a dev-only fake checkout page that triggers the signed fake webhook.
+- Writer subagents unavailable this session (Pi cwd is /Users/mateqac: "Writer bootstrap requires the original safe project root"); T6–T12 implemented inline.
