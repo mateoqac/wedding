@@ -22,7 +22,7 @@ Branch: feat/foundation. Delivery strategy: ask-on-risk → chain strategy: stac
 | T2 | S6, S9, S10 | Postgres via docker compose + Drizzle schema for all tables + first migration | inline | done | 5 integration tests (no RED: written with schema), commit 5a862f2 |
 | T3 | S2, S3, S9, S10 | Invitations domain: reference Zod schema (https URLs), name-lock rule, edit window, content hash (TDD) | inline | done | RED 4 suites → GREEN 38 tests, commit df3942e |
 | T4 | S5, S8, S10 | Payments domain: PaymentGateway port + fake, status cache in same tx, idempotent webhook, refund (TDD + integration) | inline | done | RED→GREEN: 15 unit + 8 integration, commits 96b360f, 47b8ef8; native review approved (review-5070c3a5c77c8981), ff to main |
-| T5 | S9 | Auth: sessions, access-link tokens, email port (Resend adapter) | inline | pending | |
+| T5 | S9 | Auth: sessions, access-link tokens, email port (Resend adapter) | inline | done | RED→GREEN: 7 unit + 10 integration (incl. concurrent single-use claim); commit on pr/6-auth |
 | T6 | S4, S9, S10 | Render worker: pinned Playwright image, no network, page pool, preview + export services | inline | pending | |
 | T7 | S4, S9 | Export pipeline: pg-boss `exclusive` + singletonKey, exports cache, R2 adapter | inline | pending | |
 | T8 | S2, S5, S7, S10 | Editor island: shadcn form, server preview with sequence numbers | inline | pending | |
