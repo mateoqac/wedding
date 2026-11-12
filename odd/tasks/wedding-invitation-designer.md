@@ -25,11 +25,11 @@ Branch: feat/foundation. Delivery strategy: ask-on-risk → chain strategy: stac
 | T5 | S9 | Auth: sessions, access-link tokens, email port (Resend adapter) | inline | done | RED→GREEN: 7 unit + 10 integration (incl. concurrent single-use claim); commit on pr/6-auth |
 | T6 | S4, S9, S10 | Render worker: pinned Playwright image, no network, page pool, preview + export services | inline | done | RED→GREEN 9 integration tests on real Chromium (preview 1000 px, PDF/PNG/JPG/story sizes, external requests blocked, pool 503, secret, 422); branch pr/8-render |
 | T7 | S4, S9 | Export pipeline: pg-boss `exclusive` + singletonKey, exports cache, R2 adapter | inline | done | 5 integration tests GREEN (paid check, singleton dedup, cache hit, retry with one row, rate-limit hook); RED not observed (tests not run before implementation); branch pr/9-exports |
-| T8 | S2, S5, S7, S10 | Editor island: shadcn form, server preview with sequence numbers | inline | pending | |
+| T8 | S2, S5, S7, S10 | Editor island: shadcn form, server preview with sequence numbers | inline | done | invitation service RED→GREEN 9 integration tests (drafts, access, validation, checkout owner+receipt, name lock, edit window); preview scheduler RED→GREEN 3 unit (debounce, abort/stale, backoff); form-state 4 unit (no RED: written with code); commit a094793 |
 | T9 | S2, S4 | Reference template `clasico-marco-doble/v1` | inline | done | RED→GREEN 22 tests (fixtures x formats, QR/links, crop marks, fonts inlined), commit 04b0e80 (485 lines, one unit) |
-| T10 | S1, S5, S7 | Pages: landing, gallery, checkout | inline | pending | |
+| T10 | S1, S5, S7 | Pages: landing, gallery, checkout | inline | done | landing, /plantillas, pagar, descargas, acceso, mis-invitaciones, fake checkout; covered by E2E; commit a094793 |
 | T11 | S9 | Rate limits + draft TTL cron | inline | done | RED→GREEN 6 integration tests (limits, fixed window, concurrent hits, access-link email+IP, 30-day cleanup, keeps drafts with payments); branch pr/10-rate-limits |
-| T12 | S4, S9, S10 | Visual regression (layout matrix + font specimens) + E2E happy path | inline | pending | |
+| T12 | S4, S9, S10 | Visual regression (layout matrix + font specimens) + E2E happy path | inline | done | E2E 2/2 (pick→fill→pay fake→access link from another device→download 5 formats; invalid link); visual 19/19 in pinned image (15 layout, 3 font specimens, external URL blocked); final: 91 unit, 53 integration, astro check 0, build ok |
 
 Out of MVP: boleta electrónica and print shop validation (print values fixed: 21x15 cm, 3 mm bleed, RGB).
 
@@ -64,3 +64,8 @@ Out of MVP: boleta electrónica and print shop validation (print values fixed: 2
 - D12 E2E: fake gateway with a dev-only fake checkout page that triggers the signed fake webhook.
 - Writer subagents unavailable this session (Pi cwd is /Users/mateqac: "Writer bootstrap requires the original safe project root"); T6–T12 implemented inline.
 - Native Gentle AI review for T6–T12 not started: the user asked not to be asked anything ("no me preguntes") and review needs per-run human confirmation; high-risk slices are listed at close for an optional later review.
+- Web slice a094793 is 2,418 lines (632 drizzle snapshot JSON); over the 400-line target because editor, service and pages landed together — deviation recorded.
+- Migration 0001 adds nullable invitations.checkout_email (owner attached on approval). Astro switched to output: 'server' (pages read cookies/query; prerender broke them, found by E2E).
+- Story/landscape spacing tuned so the extreme fixture fits every format (renderer overflow check: 15/15 ok); visual baselines generated in mcr.microsoft.com/playwright:v1.65.0-noble.
+- High-risk slices without native review (user asked not to be asked): T7 exports (paid gate, signed URLs), T8 checkout/owner attach + migration 0001, T11 rate limits. Risk: item 1 (migration 0001), item 2 (download/ownership checks, signed URLs), item 4 (pg-boss singleton, concurrent claim).
+- Not done (outside MVP or undecided): real payment gateway adapter (design §11), boleta electrónica, print shop validation, support unlock UI for locked names.

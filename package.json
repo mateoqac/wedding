@@ -19,7 +19,11 @@
     "db:migrate": "drizzle-kit migrate",
     "worker:preview": "RENDER_MODE=preview PORT=4101 WORKER_SECRET=dev-worker-secret tsx src/render/main.ts",
     "worker:export": "RENDER_MODE=export PORT=4102 WORKER_SECRET=dev-worker-secret tsx src/render/main.ts",
-    "workers:up": "docker compose --profile workers up -d --build"
+    "workers:up": "docker compose --profile workers up -d --build",
+    "test:e2e": "tsx tests/e2e/reset-database.ts && playwright test",
+    "test:visual": "playwright test --config playwright.visual.config.ts",
+    "test:visual:docker": "docker run --rm -v \"$PWD\":/work -v wi-visual-node-modules:/work/node_modules -w /work mcr.microsoft.com/playwright:v1.65.0-noble bash -c 'npm i -g pnpm@11.22.0 >/dev/null && CI=true pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store >/dev/null && pnpm exec playwright test --config playwright.visual.config.ts'",
+    "test:visual:update": "docker run --rm -v \"$PWD\":/work -v wi-visual-node-modules:/work/node_modules -w /work mcr.microsoft.com/playwright:v1.65.0-noble bash -c 'npm i -g pnpm@11.22.0 >/dev/null && CI=true pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store >/dev/null && pnpm exec playwright test --config playwright.visual.config.ts --update-snapshots'"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.12",
@@ -50,6 +54,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@playwright/test": "1.65.0",
     "@types/node": "^22.20.5",
     "@types/qrcode": "^1.5.6",
     "drizzle-kit": "^0.31.11",

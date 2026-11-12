@@ -7,6 +7,8 @@ import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
+  // Every page reads cookies or query params (sessions, edit tokens), so render on demand.
+  output: 'server',
   integrations: [react()],
 
   vite: {
