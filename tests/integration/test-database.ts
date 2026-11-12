@@ -23,6 +23,7 @@ export async function createTestDatabase() {
   return {
     db,
     client,
+    url: url.toString(),
     async drop() {
       await client.end();
       await admin.unsafe(`drop database if exists ${name} with (force)`);

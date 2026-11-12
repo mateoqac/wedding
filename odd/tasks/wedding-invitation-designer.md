@@ -24,7 +24,7 @@ Branch: feat/foundation. Delivery strategy: ask-on-risk → chain strategy: stac
 | T4 | S5, S8, S10 | Payments domain: PaymentGateway port + fake, status cache in same tx, idempotent webhook, refund (TDD + integration) | inline | done | RED→GREEN: 15 unit + 8 integration, commits 96b360f, 47b8ef8; native review approved (review-5070c3a5c77c8981), ff to main |
 | T5 | S9 | Auth: sessions, access-link tokens, email port (Resend adapter) | inline | done | RED→GREEN: 7 unit + 10 integration (incl. concurrent single-use claim); commit on pr/6-auth |
 | T6 | S4, S9, S10 | Render worker: pinned Playwright image, no network, page pool, preview + export services | inline | done | RED→GREEN 9 integration tests on real Chromium (preview 1000 px, PDF/PNG/JPG/story sizes, external requests blocked, pool 503, secret, 422); branch pr/8-render |
-| T7 | S4, S9 | Export pipeline: pg-boss `exclusive` + singletonKey, exports cache, R2 adapter | inline | pending | |
+| T7 | S4, S9 | Export pipeline: pg-boss `exclusive` + singletonKey, exports cache, R2 adapter | inline | done | 5 integration tests GREEN (paid check, singleton dedup, cache hit, retry with one row, rate-limit hook); RED not observed (tests not run before implementation); branch pr/9-exports |
 | T8 | S2, S5, S7, S10 | Editor island: shadcn form, server preview with sequence numbers | inline | pending | |
 | T9 | S2, S4 | Reference template `clasico-marco-doble/v1` | inline | done | RED→GREEN 22 tests (fixtures x formats, QR/links, crop marks, fonts inlined), commit 04b0e80 (485 lines, one unit) |
 | T10 | S1, S5, S7 | Pages: landing, gallery, checkout | inline | pending | |
