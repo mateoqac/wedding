@@ -3,6 +3,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteHeader from "@/layouts/SiteHeader.astro";
 import { getContainer } from "@/server/container";
 import { accessFor } from "@/server/http";
+import { buildShareText } from "@/invitations/share-text";
+import type { InvitationData } from "@/templates/clasico-marco-doble/v1/schema";
 import { getTemplate } from "@/templates/registry";
 
 const id = Astro.params.id as string;
@@ -11,6 +13,8 @@ if (!invitation) return Astro.redirect("/acceso?error=no_access");
 if (invitation.status !== "paid") return Astro.redirect(`/invitaciones/${id}/pagar`);
 const template = getTemplate(invitation.templateId, invitation.templateVersion);
 const facts = template.facts(invitation.data);
+// Paid invitations always hold complete data (validated on save), shared by every template.
+const shareText = buildShareText(template.dataSchema.parse(invitation.data) as InvitationData);
 
 const formats = [
   { id: "print-pdf", name: "PDF para imprenta", text: "21 x 15 cm con 3 mm de sangrado y marcas de corte." },
@@ -47,6 +51,49 @@ const justPaid = Astro.url.searchParams.has("pagado");
       ))}
     </ul>
     <p class="text-sm text-muted-foreground">Cada descarga se genera al momento y el enlace vence a los 5 minutos. Puedes volver a descargar cuantas veces quieras.</p>
+    <section class="flex flex-col gap-2 border-t pt-6" aria-labelledby="share-text-title">
+      <h2 id="share-text-title" class="text-[15px] font-medium">Texto para compartir</h2>
+      <p id="share-text-help" class="text-sm text-muted-foreground">
+        Al publicar la imagen en WhatsApp o Instagram, pega este texto como descripción o texto alternativo: así las personas que usan lectores de pantalla también reciben todos los datos.
+      </p>
+      <textarea
+        id="share-text"
+        readonly
+        rows="9"
+        aria-labelledby="share-text-title"
+        aria-describedby="share-text-help"
+        class="w-full rounded-md border bg-background p-3 text-sm leading-relaxed focus-visible:outline-2 focus-visible:outline-offset-2"
+      >{shareText}</textarea>
+      <div class="flex items-center gap-3">
+        <button
+          type="button"
+          id="copy-share-text"
+          hidden
+          class="inline-flex h-9 items-center rounded-md border px-3 text-sm font-medium hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          Copiar texto
+        </button>
+        <span id="copy-status" role="status" class="text-sm text-muted-foreground"></span>
+      </div>
+    </section>
+    <script>
+      // Progressive enhancement: without JavaScript the text can still be selected and copied.
+      const button = document.getElementById("copy-share-text");
+      const area = document.getElementById("share-text") as HTMLTextAreaElement | null;
+      const status = document.getElementById("copy-status");
+      if (button && area && status && navigator.clipboard) {
+        button.hidden = false;
+        button.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(area.value);
+            status.textContent = "Texto copiado.";
+          } catch {
+            area.select();
+            status.textContent = "Selecciona el texto y cópialo con Ctrl+C o Cmd+C.";
+          }
+        });
+      }
+    </script>
     <p class="mt-2 text-sm"><a href={`/editor/${id}`} class="underline underline-offset-4">Editar la invitación</a></p>
   </main>
 </BaseLayout>
