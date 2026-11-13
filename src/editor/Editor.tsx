@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { RadioGroup } from "./RadioGroup";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -102,24 +103,12 @@ function OptionGroup({
   onChange: (value: string) => void;
 }) {
   return (
-    <div className="grid gap-1.5" role="radiogroup" aria-label={spec.label}>
-      <span className="text-sm font-medium">{spec.label}</span>
-      <div className="flex flex-wrap gap-2">
-        {Object.entries(spec.choices).map(([key, text]) => (
-          <Button
-            key={key}
-            type="button"
-            size="sm"
-            role="radio"
-            aria-checked={value === key}
-            variant={value === key ? "default" : "outline"}
-            onClick={() => onChange(key)}
-          >
-            {text}
-          </Button>
-        ))}
-      </div>
-    </div>
+    <RadioGroup
+      label={spec.label}
+      options={Object.entries(spec.choices).map(([key, text]) => ({ value: key, label: text }))}
+      value={value}
+      onChange={onChange}
+    />
   );
 }
 
@@ -269,7 +258,19 @@ export default function Editor({ invitationId, initialData, initialOptions, opti
           <Field label="Lista de regalos: enlace (https)" name="giftUrl" type="url" value={form.giftUrl} onChange={set("giftUrl")} error={errors.giftUrl} />
           <Field label="Dirección para el sobre" name="envelopeAddress" value={form.envelopeAddress} onChange={set("envelopeAddress")} error={errors.envelopeAddress} />
         </Section>
-        <Section title="Estilo">
+      </form>
+
+      <section className="grid content-start gap-4 lg:sticky lg:top-6" aria-label="Vista previa">
+        {/* A choice of what the preview shows, not tabs with panels: a radio group. */}
+        <RadioGroup
+          label="Formato"
+          showLabel={false}
+          options={(Object.keys(FORMAT_LABELS) as Format[]).map((f) => ({ value: f, label: FORMAT_LABELS[f] }))}
+          value={format}
+          onChange={(f) => setFormat(f as Format)}
+        />
+        {/* Style options live next to the preview: they change what you see, the form changes the content. */}
+        <section className="flex flex-wrap gap-x-8 gap-y-4 rounded-lg border px-4 py-3.5" aria-label="Estilo">
           {optionSpecs.map((spec) => (
             <OptionGroup
               key={spec.name}
@@ -278,17 +279,7 @@ export default function Editor({ invitationId, initialData, initialOptions, opti
               onChange={(v) => setOptions((o) => ({ ...o, [spec.name]: v }))}
             />
           ))}
-        </Section>
-      </form>
-
-      <section className="grid content-start gap-4 lg:sticky lg:top-6" aria-label="Vista previa">
-        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Formato">
-          {(Object.keys(FORMAT_LABELS) as Format[]).map((f) => (
-            <Button key={f} type="button" size="sm" role="tab" aria-selected={format === f} variant={format === f ? "default" : "outline"} onClick={() => setFormat(f)}>
-              {FORMAT_LABELS[f]}
-            </Button>
-          ))}
-        </div>
+        </section>
         <div className="relative grid min-h-64 place-items-center rounded-lg border bg-muted/40 p-4">
           {lastGood ? (
             <img src={lastGood.url} alt="Vista previa de la invitación con marca de agua" className={`max-h-[75vh] w-auto shadow-md transition-opacity ${preview.status === "loading" ? "opacity-60" : ""}`} />
