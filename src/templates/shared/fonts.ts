@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
@@ -30,6 +31,16 @@ export type FontKey = keyof typeof FONT_FAMILIES;
 
 const cache = new Map<FontKey, string>();
 
+/**
+ * Prefers the copy in ./fonts (made by scripts/copy-fonts.mjs for serverless bundles, where
+ * pnpm's node_modules cannot be resolved), else the @fontsource package.
+ */
+function fontFile(fileName: string, slug: string): string {
+  const bundled = join(process.cwd(), "fonts", fileName);
+  if (existsSync(bundled)) return bundled;
+  return require.resolve(`@fontsource/${slug}/files/${fileName}`);
+}
+
 function familyCss(key: FontKey): string {
   const cached = cache.get(key);
   if (cached) return cached;
@@ -39,8 +50,7 @@ function familyCss(key: FontKey): string {
   for (const weight of font.weights) {
     for (const style of styles) {
       for (const [subset, range] of [["latin", LATIN], ["latin-ext", LATIN_EXT]] as const) {
-        const file = require.resolve(`@fontsource/${font.slug}/files/${font.slug}-${subset}-${weight}-${style}.woff2`);
-        const data = readFileSync(file).toString("base64");
+        const data = readFileSync(fontFile(`${font.slug}-${subset}-${weight}-${style}.woff2`, font.slug)).toString("base64");
         rules.push(
           `@font-face{font-family:'${font.family}';font-style:${style};font-weight:${weight};font-display:block;src:url(data:font/woff2;base64,${data}) format('woff2');unicode-range:${range};}`,
         );

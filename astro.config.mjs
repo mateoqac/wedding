@@ -1,5 +1,5 @@
 // @ts-check
-import { readdirSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join, relative } from 'node:path';
 import { defineConfig } from 'astro/config';
@@ -27,13 +27,8 @@ function packageRoot(name) {
  * template fonts (base64-inlined into each render) and the serverless Chromium binary.
  */
 function runtimeFiles() {
-  const files = [];
-  for (const pkg of ['cormorant-garamond', 'playfair-display', 'great-vibes', 'bodoni-moda', 'inter', 'libre-baskerville', 'caveat']) {
-    const dir = join(dirname(require.resolve(`@fontsource/${pkg}/package.json`)), 'files');
-    for (const file of readdirSync(dir)) {
-      if (/-latin(-ext)?-\d+-(normal|italic)\.woff2$/.test(file)) files.push(relative(process.cwd(), join(dir, file)));
-    }
-  }
+  // Fonts are copied to ./fonts by scripts/copy-fonts.mjs (run in vercel-build).
+  const files = existsSync('fonts') ? readdirSync('fonts').map((f) => join('fonts', f)) : [];
   const chromiumBin = join(packageRoot('@sparticuz/chromium'), 'bin');
   for (const file of readdirSync(chromiumBin)) files.push(relative(process.cwd(), join(chromiumBin, file)));
   return files;
