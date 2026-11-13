@@ -1,0 +1,16 @@
+{
+  "title": "Pantallas del sitio",
+  "brief": "Mockups de las siete páginas de la app web con los tokens de DESIGN.md (shadcn neutral, sans del sistema) y los textos de las páginas Astro. Hero asimétrico con la vista previa, listas con filetes en vez de tarjetas, resumen de la invitación en el pago.",
+  "canvas": "https://claude.ai/artifact/4Fn2wZ7YXoSGXQnMrcHYPN",
+  "format": "Archivos .dc.html del lienzo de Claude Design: se ven completos en el lienzo; abiertos sueltos en un navegador, las pestañas y opciones del editor (sc-for, {{…}}) no funcionan.",
+  "feature": "odd/tasks/wedding-invitation-designer.md",
+  "artboards": [
+    { "file": "Main.dc.html", "title": "01 Landing", "page": "src/pages/index.astro", "width": 1280, "height": 1060 },
+    { "file": "Plantillas.dc.html", "title": "02 Plantillas", "page": "src/pages/plantillas.astro", "width": 1280, "height": 1380 },
+    { "file": "Editor.dc.html", "title": "03 Editor", "page": "src/pages/editor/[id].astro + src/editor/Editor.tsx", "width": 1280, "height": 1560 },
+    { "file": "Pagar.dc.html", "title": "04 Pagar", "page": "src/pages/invitaciones/[id]/pagar.astro", "width": 1280, "height": 720 },
+    { "file": "Descargas.dc.html", "title": "05 Descargas", "page": "src/pages/invitaciones/[id]/descargas.astro", "width": 1280, "height": 860 },
+    { "file": "Acceso.dc.html", "title": "06 Acceso", "page": "src/pages/acceso.astro", "width": 1280, "height": 600 },
+    { "file": "MisInvitaciones.dc.html", "title": "07 Mis invitaciones", "page": "src/pages/mis-invitaciones.astro", "width": 1280, "height": 560 }
+  ]
+}
