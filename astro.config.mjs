@@ -11,6 +11,17 @@ import vercel from '@astrojs/vercel';
 
 const require = createRequire(import.meta.url);
 
+/** Package root from its main entry (works for packages that do not export package.json). */
+function packageRoot(name) {
+  let dir = dirname(require.resolve(name));
+  while (!dir.endsWith(join('node_modules', ...name.split('/')))) {
+    const parent = dirname(dir);
+    if (parent === dir) throw new Error(`Cannot find package root of ${name}`);
+    dir = parent;
+  }
+  return dir;
+}
+
 /**
  * Files read at runtime through computed paths, which the function bundler cannot trace:
  * template fonts (base64-inlined into each render) and the serverless Chromium binary.
@@ -23,7 +34,7 @@ function runtimeFiles() {
       if (/-latin(-ext)?-\d+-(normal|italic)\.woff2$/.test(file)) files.push(relative(process.cwd(), join(dir, file)));
     }
   }
-  const chromiumBin = join(dirname(require.resolve('@sparticuz/chromium/package.json')), 'bin');
+  const chromiumBin = join(packageRoot('@sparticuz/chromium'), 'bin');
   for (const file of readdirSync(chromiumBin)) files.push(relative(process.cwd(), join(chromiumBin, file)));
   return files;
 }
