@@ -3,11 +3,14 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteHeader from "@/layouts/SiteHeader.astro";
 import { getContainer } from "@/server/container";
 import { accessFor } from "@/server/http";
+import { getTemplate } from "@/templates/registry";
 
 const id = Astro.params.id as string;
 const invitation = await getContainer().invitations.load(id, accessFor(Astro.cookies, id, Astro.locals.user?.id));
 if (!invitation) return Astro.redirect("/acceso?error=no_access");
 if (invitation.status !== "paid") return Astro.redirect(`/invitaciones/${id}/pagar`);
+const template = getTemplate(invitation.templateId, invitation.templateVersion);
+const facts = template.facts(invitation.data);
 
 const formats = [
   { id: "print-pdf", name: "PDF para imprenta", text: "21 x 15 cm con 3 mm de sangrado y marcas de corte." },
@@ -21,25 +24,29 @@ const justPaid = Astro.url.searchParams.has("pagado");
 
 <BaseLayout title="Descargas — Partes de matrimonio">
   <SiteHeader user={Astro.locals.user} />
-  <main class="mx-auto max-w-3xl px-4 py-12">
-    {justPaid && <p role="status" class="mb-6 rounded-md border p-3 text-sm">¡Pago confirmado! Te enviamos un email con el recibo y tu enlace de acceso.</p>}
-    <h1 class="text-2xl font-semibold">Descarga tu invitación</h1>
-    <ul class="mt-6 grid gap-4">
+  <main class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-12">
+    {justPaid && <p role="status" class="rounded-md border p-3 text-sm">¡Pago confirmado! Te enviamos un email con el recibo y tu enlace de acceso.</p>}
+    <div class="flex flex-col gap-2">
+      <h1 class="text-2xl font-semibold tracking-tight">Descarga tu invitación</h1>
+      <p class="text-[15px] text-muted-foreground">{facts.coupleNames.join(" y ")} · {template.meta.name}</p>
+    </div>
+    <ul class="divide-y border-y">
       {formats.map((format) => (
-        <li class="flex items-center justify-between gap-4 rounded-lg border p-4">
-          <div>
-            <h2 class="font-medium">{format.name}</h2>
+        <li class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4">
+          <div class="flex-1 basis-80">
+            <h2 class="text-[15px] font-medium">{format.name}</h2>
             <p class="text-sm text-muted-foreground">{format.text}</p>
           </div>
           <a
             href={`/invitaciones/${id}/descargar/${format.id}`}
-            class="inline-flex h-10 shrink-0 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            class="inline-flex h-10 shrink-0 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Descargar
           </a>
         </li>
       ))}
     </ul>
-    <p class="mt-8 text-sm"><a href={`/editor/${id}`} class="underline">Editar la invitación</a></p>
+    <p class="text-sm text-muted-foreground">Cada descarga se genera al momento y el enlace vence a los 5 minutos. Puedes volver a descargar cuantas veces quieras.</p>
+    <p class="mt-2 text-sm"><a href={`/editor/${id}`} class="underline underline-offset-4">Editar la invitación</a></p>
   </main>
 </BaseLayout>

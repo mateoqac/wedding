@@ -1,8 +1,10 @@
 ---
 import { desc, eq } from "drizzle-orm";
 import { invitations } from "@/db/schema";
+import { isWithinEditWindow } from "@/invitations/edit-window";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteHeader from "@/layouts/SiteHeader.astro";
+import { formatDay, formatIsoDate } from "@/lib/dates";
 import { getContainer } from "@/server/container";
 import { getTemplate } from "@/templates/registry";
 
@@ -13,27 +15,56 @@ const rows = await getContainer()
   .from(invitations)
   .where(eq(invitations.userId, user.id))
   .orderBy(desc(invitations.updatedAt));
-const coupleOf = (row: (typeof rows)[number]) => getTemplate(row.templateId, row.templateVersion).facts(row.data).coupleNames.join(" y ");
+const now = new Date();
+const items = rows.map((row) => {
+  const template = getTemplate(row.templateId, row.templateVersion);
+  const facts = template.facts(row.data);
+  const editable = !row.editWindowEndsAt || isWithinEditWindow(now, row.editWindowEndsAt);
+  return {
+    id: row.id,
+    couple: facts.coupleNames.join(" y "),
+    template: template.meta.name,
+    date: formatIsoDate(facts.weddingDate),
+    editable,
+    editUntil: row.editWindowEndsAt ? formatDay(row.editWindowEndsAt) : null,
+  };
+});
 ---
 
 <BaseLayout title="Mis invitaciones — Partes de matrimonio">
   <SiteHeader user={user} />
-  <main class="mx-auto max-w-3xl px-4 py-12">
-    <h1 class="text-2xl font-semibold">Mis invitaciones</h1>
-    {rows.length === 0 ? (
-      <p class="mt-6 text-muted-foreground">Aún no tienes invitaciones pagadas con {user.email}. <a href="/plantillas" class="underline">Crea una</a>.</p>
+  <main class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-12">
+    <div class="flex flex-col gap-2">
+      <h1 class="text-2xl font-semibold tracking-tight">Mis invitaciones</h1>
+      <p class="text-[15px] text-muted-foreground">Invitaciones pagadas con {user.email}</p>
+    </div>
+    {items.length === 0 ? (
+      <p class="text-muted-foreground">Aún no tienes invitaciones pagadas con {user.email}. <a href="/plantillas" class="underline underline-offset-4">Crea una</a>.</p>
     ) : (
-      <ul class="mt-6 grid gap-4">
-        {rows.map((row) => (
-          <li class="flex items-center justify-between gap-4 rounded-lg border p-4">
-            <span class="font-medium">{coupleOf(row)}</span>
-            <span class="flex gap-4 text-sm">
-              <a href={`/editor/${row.id}`} class="underline">Editar</a>
-              <a href={`/invitaciones/${row.id}/descargas`} class="underline">Descargar</a>
+      <ul class="divide-y border-y">
+        {items.map((item) => (
+          <li class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4">
+            <div class="flex flex-1 basis-80 flex-col gap-0.5">
+              <span class="text-[15px] font-medium">{item.couple}</span>
+              <span class="text-sm text-muted-foreground">
+                {item.template} · {item.date} ·{" "}
+                {item.editable
+                  ? item.editUntil
+                    ? `editable hasta el ${item.editUntil}`
+                    : "editable"
+                  : "el plazo de edición terminó"}
+              </span>
+            </div>
+            <span class="flex shrink-0 gap-4 text-sm">
+              {item.editable && <a href={`/editor/${item.id}`} class="underline underline-offset-4">Editar</a>}
+              <a href={`/invitaciones/${item.id}/descargas`} class="underline underline-offset-4">Descargar</a>
             </span>
           </li>
         ))}
       </ul>
+    )}
+    {items.length > 0 && (
+      <p class="text-sm text-muted-foreground">¿Otra invitación? <a href="/plantillas" class="underline underline-offset-4">Crea una</a>.</p>
     )}
   </main>
 </BaseLayout>

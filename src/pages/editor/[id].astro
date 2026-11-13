@@ -15,7 +15,18 @@ const template = getTemplate(invitation.templateId, invitation.templateVersion);
 <BaseLayout title={`Editor — ${template.meta.name}`}>
   <SiteHeader user={Astro.locals.user} />
   <main class="mx-auto max-w-7xl px-4 py-8">
-    <h1 class="mb-6 text-2xl font-semibold">Completa tu invitación</h1>
+    <div class="mb-6 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+      <h1 class="text-2xl font-semibold tracking-tight">Completa tu invitación</h1>
+      <p class="text-sm text-muted-foreground">
+        Plantilla {template.meta.name}
+        {invitation.status !== "paid" && (
+          <>
+            {" · "}
+            <a href="/plantillas" class="underline underline-offset-4">cambiar</a>
+          </>
+        )}
+      </p>
+    </div>
     <Editor
       client:load
       invitationId={invitation.id}

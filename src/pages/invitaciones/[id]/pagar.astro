@@ -1,9 +1,11 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteHeader from "@/layouts/SiteHeader.astro";
+import { formatIsoDate } from "@/lib/dates";
 import { formatClp } from "@/lib/money";
 import { getContainer } from "@/server/container";
 import { accessFor } from "@/server/http";
+import { getTemplate } from "@/templates/registry";
 
 const id = Astro.params.id as string;
 const container = getContainer();
@@ -11,6 +13,9 @@ const invitation = await container.invitations.load(id, accessFor(Astro.cookies,
 if (!invitation) return Astro.redirect("/acceso?error=no_access");
 if (invitation.status === "paid") return Astro.redirect(`/invitaciones/${id}/descargas`);
 const complete = container.invitations.isComplete(invitation);
+const template = getTemplate(invitation.templateId, invitation.templateVersion);
+const facts = complete ? template.facts(invitation.data) : null;
+const price = formatClp(container.priceClp);
 
 const ERRORS: Record<string, string> = {
   invalid_email: "Revisa el email: lo necesitamos para enviarte el recibo y tu enlace de acceso.",
@@ -22,32 +27,57 @@ const error = ERRORS[Astro.url.searchParams.get("error") ?? ""];
 
 <BaseLayout title="Pagar — Partes de matrimonio">
   <SiteHeader user={Astro.locals.user} />
-  <main class="mx-auto max-w-lg px-4 py-12">
-    <h1 class="text-2xl font-semibold">Desbloquea tu invitación</h1>
-    <p class="mt-2 text-muted-foreground">
-      Un pago único de <strong>{formatClp(container.priceClp)}</strong> desbloquea todos los formatos: PDF para imprenta,
-      PDF digital, PNG, JPG e historia 9:16.
-    </p>
-    {error && <p role="alert" class="mt-4 rounded-md border border-destructive p-3 text-sm text-destructive">{error}</p>}
-    {complete ? (
-      <form method="post" action="/api/checkout" class="mt-8 grid gap-4">
-        <input type="hidden" name="invitationId" value={id} />
-        <label class="grid gap-1.5 text-sm font-medium">
-          Email
-          <input
-            type="email"
-            name="email"
-            required
-            autocomplete="email"
-            value={Astro.locals.user?.email ?? ""}
-            class="h-10 rounded-md border px-3 font-normal"
-          />
-          <span class="font-normal text-muted-foreground">Te enviaremos el recibo y un enlace para volver a tu invitación desde cualquier dispositivo.</span>
-        </label>
-        <button class="h-11 rounded-md bg-primary font-medium text-primary-foreground hover:bg-primary/90">Pagar {formatClp(container.priceClp)}</button>
-      </form>
-    ) : (
-      <a href={`/editor/${id}`} class="mt-8 inline-block underline">Volver al editor</a>
+  <main class="mx-auto flex max-w-6xl flex-wrap items-start gap-x-16 gap-y-12 px-4 py-12">
+    <div class="flex max-w-lg flex-1 basis-80 flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <h1 class="text-2xl font-semibold tracking-tight">Desbloquea tu invitación</h1>
+        <p class="text-muted-foreground text-pretty">
+          Un pago único de <strong class="font-semibold text-foreground">{price}</strong> desbloquea todos los formatos: PDF para imprenta,
+          PDF digital, PNG, JPG e historia 9:16.
+        </p>
+      </div>
+      {error && <p role="alert" class="rounded-md border border-destructive p-3 text-sm text-destructive">{error}</p>}
+      {complete ? (
+        <form method="post" action="/api/checkout" class="grid gap-4">
+          <input type="hidden" name="invitationId" value={id} />
+          <label class="grid gap-1.5 text-sm font-medium">
+            Email
+            <input
+              type="email"
+              name="email"
+              required
+              autocomplete="email"
+              value={Astro.locals.user?.email ?? ""}
+              class="h-10 rounded-md border px-3 font-normal"
+            />
+            <span class="font-normal text-muted-foreground">Te enviaremos el recibo y un enlace para volver a tu invitación desde cualquier dispositivo.</span>
+          </label>
+          <button class="h-11 rounded-md bg-primary font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2">Pagar {price}</button>
+        </form>
+      ) : null}
+      <dl class="divide-y border-t text-sm">
+        <div class="grid grid-cols-[8.75rem_minmax(0,1fr)] gap-4 py-3">
+          <dt class="text-muted-foreground">Después de pagar</dt>
+          <dd>Puedes seguir editando el resto de los datos hasta 30 días después del matrimonio. Los nombres de los novios quedan fijados; solo admiten correcciones menores.</dd>
+        </div>
+        <div class="grid grid-cols-[8.75rem_minmax(0,1fr)] gap-4 border-b py-3">
+          <dt class="text-muted-foreground">Acceso</dt>
+          <dd>Sin contraseña: el enlace del email abre tu invitación desde cualquier dispositivo.</dd>
+        </div>
+      </dl>
+      <p class="text-sm"><a href={`/editor/${id}`} class="underline underline-offset-4">Volver al editor</a></p>
+    </div>
+    {facts && (
+      <aside aria-label="Resumen de la invitación" class="flex max-w-md flex-1 basis-72 flex-col gap-3">
+        <dl class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-sm">
+          <dt class="text-muted-foreground">Plantilla</dt>
+          <dd>{template.meta.name}</dd>
+          <dt class="text-muted-foreground">Novios</dt>
+          <dd>{facts.coupleNames.join(" y ")}</dd>
+          <dt class="text-muted-foreground">Fecha</dt>
+          <dd>{formatIsoDate(facts.weddingDate)}</dd>
+        </dl>
+      </aside>
     )}
   </main>
 </BaseLayout>
