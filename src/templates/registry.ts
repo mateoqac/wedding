@@ -17,6 +17,8 @@ import { editorialV1 } from "./editorial/v1";
 import { monogramaV1 } from "./monograma/v1";
 import { botanicaNeutraV1 } from "./botanica-neutra/v1";
 import { neutroCalidoV1 } from "./neutro-calido/v1";
+import { trazoAManoV1 } from "./trazo-a-mano/v1";
+import { encajeVintageV1 } from "./encaje-vintage/v1";
 
 /** Template-independent facts the domain needs from an invitation's data. */
 export interface InvitationFacts {
@@ -74,6 +76,8 @@ const TEMPLATES: Record<string, Record<number, TemplateModule>> = {
   monograma: { 1: monogramaV1 },
   "botanica-neutra": { 1: botanicaNeutraV1 },
   "neutro-calido": { 1: neutroCalidoV1 },
+  "trazo-a-mano": { 1: trazoAManoV1 },
+  "encaje-vintage": { 1: encajeVintageV1 },
 };
 
 export function getTemplate(templateId: string, templateVersion: number): TemplateModule {
