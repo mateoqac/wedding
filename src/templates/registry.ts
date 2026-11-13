@@ -13,6 +13,7 @@ import {
 } from "./clasico-marco-doble/v1/options";
 import { invitationDataSchema as clasicoData } from "./clasico-marco-doble/v1/schema";
 import { Template as ClasicoTemplate } from "./clasico-marco-doble/v1/Template";
+import { editorialV1 } from "./editorial/v1";
 
 /** Template-independent facts the domain needs from an invitation's data. */
 export interface InvitationFacts {
@@ -42,6 +43,7 @@ export interface TemplateModule {
 }
 
 const TEMPLATES: Record<string, Record<number, TemplateModule>> = {
+  editorial: { 1: editorialV1 },
   "clasico-marco-doble": {
     1: {
       meta: clasicoMeta,

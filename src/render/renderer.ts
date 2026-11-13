@@ -107,8 +107,10 @@ export function createRenderer({
 
   async function overflowOf(page: Page) {
     return page.evaluate(() => {
-      const frame = document.querySelector(".frame");
-      return !!frame && frame.scrollHeight > frame.clientHeight + 1;
+      // ".frame" (reference template) or ".trim" (shared Page shell) must contain all content.
+      return [...document.querySelectorAll(".frame, .trim")].some(
+        (el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1,
+      );
     });
   }
 
