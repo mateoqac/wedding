@@ -11,7 +11,10 @@ import vercel from '@astrojs/vercel';
 
 const require = createRequire(import.meta.url);
 
-/** Package root from its main entry (works for packages that do not export package.json). */
+/**
+ * Package root from its main entry (works for packages that do not export package.json).
+ * @param {string} name
+ */
 function packageRoot(name) {
   let dir = dirname(require.resolve(name));
   while (!dir.endsWith(join('node_modules', ...name.split('/')))) {
