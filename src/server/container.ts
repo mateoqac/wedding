@@ -65,7 +65,9 @@ function buildGateway(db: Database): PaymentGateway {
 
 /** Composition root: wires adapters from environment variables (see README). */
 function createContainer() {
-  const baseUrl = env("BASE_URL", "http://localhost:4321");
+  // On Vercel the production domain is known at runtime; elsewhere BASE_URL or localhost.
+  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  const baseUrl = env("BASE_URL", vercelUrl ? `https://${vercelUrl}` : "http://localhost:4321");
   const databaseUrl = env("DATABASE_URL", "postgres://wedding:wedding@localhost:5433/wedding");
   const { db } = createDatabase(databaseUrl, { serverless: !!process.env.VERCEL });
   const rateLimiter = createRateLimiter({ db });
