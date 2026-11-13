@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plantilla Trazo a mano — propuesta</title>
+<style>
+  :root { --ink:#2a2a2a; --pop:#d9643a; --pop2:#e9b44c; --paper:#fffdf9; --bg:#efe9e2; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; color:#222; }
+  header { padding:28px 48px 0; display:flex; justify-content:space-between; align-items:baseline; }
+  header h1 { font-size:20px; font-weight:600; }
+  header p { font-size:14px; color:#4a4a4a; max-width:640px; }
+  main { display:flex; gap:40px; padding:24px 48px 48px; align-items:flex-start; }
+  figure { display:grid; gap:10px; }
+  figcaption { font-size:13px; color:#4a4a4a; }
+  .card { background:var(--paper); box-shadow:0 12px 32px rgba(0,0,0,.14); color:var(--ink); position:relative; overflow:hidden; text-align:center; }
+  .landscape { width:868px; height:620px; display:grid; align-content:center; justify-items:center; gap:14px; padding:60px 120px; }
+  .story { width:349px; height:620px; display:grid; align-content:center; justify-items:center; gap:16px; padding:40px 28px; }
+  .doodle { position:absolute; pointer-events:none; }
+  .hand { font-family:"Marker Felt","Chalkboard SE","Comic Sans MS",cursive; }
+  .names { font-family:"Avenir Next","Helvetica Neue",sans-serif; font-weight:700; font-size:64px; letter-spacing:-.02em; line-height:1; }
+  .names .y { font-family:"Snell Roundhand","Apple Chancery",cursive; font-weight:400; color:var(--pop); font-size:.8em; }
+  .story .names { font-size:44px; }
+  .small { font-size:15px; line-height:1.55; font-family:"Avenir Next","Helvetica Neue",sans-serif; }
+  .hand-note { font-size:20px; color:var(--pop); }
+</style>
+</head>
+<body>
+<header>
+  <h1>05 · Trazo a mano</h1>
+  <p>Líneas sueltas tipo cuaderno de dibujo con dos toques de color. Sans bold moderna para los nombres; tono alegre para civil o aire libre.</p>
+</header>
+<main>
+  <figure>
+    <div class="card landscape" role="img" aria-label="Parte horizontal con trazos dibujados a mano">
+      <svg class="doodle" style="left:30px;top:30px;width:180px;height:120px" viewBox="0 0 180 120" aria-hidden="true"><path d="M10 90 C 30 10, 70 10, 60 60 S 110 110, 130 40 S 170 20, 160 70" stroke="#d9643a" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+      <svg class="doodle" style="right:40px;bottom:30px;width:200px;height:110px" viewBox="0 0 200 110" aria-hidden="true"><path d="M10 60 Q 50 10 90 55 T 170 50" stroke="#e9b44c" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="182" cy="48" r="6" fill="none" stroke="#e9b44c" stroke-width="3"/></svg>
+      <svg class="doodle" style="right:70px;top:50px;width:70px;height:70px" viewBox="0 0 70 70" aria-hidden="true"><path d="M35 8 L40 28 L60 30 L44 42 L50 62 L35 50 L20 62 L26 42 L10 30 L30 28 Z" fill="none" stroke="#2a2a2a" stroke-width="2" stroke-linejoin="round"/></svg>
+      <p class="hand hand-note">¡nos casamos!</p>
+      <h2 class="names">Francisca <span class="y">y</span> Álvaro</h2>
+      <p class="small">Junto a sus padres Osvaldo, Marcela, Álvaro y Paula</p>
+      <p class="small"><strong>Sábado 13 de marzo de 2027 · 16:45</strong><br>Capilla del Colegio Cumbres, Av. La Plaza 1150, Las Condes</p>
+      <p class="small">Después, ¡a celebrar! 22:00 · Arboleda Chicureo</p>
+      <p class="small">Confirma al +56 9 8299 5134</p>
+    </div>
+    <figcaption>Imprenta 21 × 15 cm</figcaption>
+  </figure>
+  <figure>
+    <div class="card story" role="img" aria-label="Historia vertical con trazos dibujados a mano">
+      <svg class="doodle" style="left:20px;top:40px;width:120px;height:90px" viewBox="0 0 180 120" aria-hidden="true"><path d="M10 90 C 30 10, 70 10, 60 60 S 110 110, 130 40 S 170 20, 160 70" stroke="#d9643a" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
+      <svg class="doodle" style="right:20px;bottom:60px;width:140px;height:80px" viewBox="0 0 200 110" aria-hidden="true"><path d="M10 60 Q 50 10 90 55 T 170 50" stroke="#e9b44c" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
+      <p class="hand hand-note">¡nos casamos!</p>
+      <h2 class="names">Francisca<br><span class="y">y</span><br>Álvaro</h2>
+      <p class="small"><strong>13 · 03 · 2027</strong><br>Capilla Colegio Cumbres · 16:45</p>
+    </div>
+    <figcaption>Historia 9:16</figcaption>
+  </figure>
+</main>
+</body>
+</html>

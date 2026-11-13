@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plantilla Monograma — propuesta</title>
+<style>
+  :root { --ink:#1e2a44; --accent:#8a7344; --paper:#fdfcf9; --bg:#e4e6ea; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; color:#222; }
+  header { padding:28px 48px 0; display:flex; justify-content:space-between; align-items:baseline; }
+  header h1 { font-size:20px; font-weight:600; }
+  header p { font-size:14px; color:#4a4a4a; max-width:640px; }
+  main { display:flex; gap:40px; padding:24px 48px 48px; align-items:flex-start; }
+  figure { display:grid; gap:10px; }
+  figcaption { font-size:13px; color:#4a4a4a; }
+  .card { background:var(--paper); box-shadow:0 12px 32px rgba(0,0,0,.14); color:var(--ink); font-family:Baskerville,"Baskerville Old Face",Georgia,serif; text-align:center; }
+  .landscape { width:868px; height:620px; display:grid; grid-template-columns:300px 1fr; align-items:center; padding:48px; gap:48px; }
+  .story { width:349px; height:620px; display:grid; align-content:center; justify-items:center; gap:22px; padding:36px 26px; }
+  .seal { width:240px; height:240px; }
+  .story .seal { width:170px; height:170px; }
+  .seal text { font-family:Didot,"Bodoni 72",Georgia,serif; }
+  .body { display:grid; gap:14px; border-left:1px solid var(--accent); padding-left:48px; text-align:left; }
+  .names { font-size:38px; font-weight:400; line-height:1.1; }
+  .names span { color:var(--accent); font-style:italic; font-size:.7em; }
+  .small { font-size:14px; line-height:1.55; }
+  .caps { font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); font-family:-apple-system,"Helvetica Neue",sans-serif; }
+  .story .names { font-size:30px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>02 · Monograma</h1>
+  <p>Iniciales entrelazadas dentro de un sello, generadas automáticamente desde los nombres. Azul noche con detalle bronce.</p>
+</header>
+<main>
+  <figure>
+    <div class="card landscape" role="img" aria-label="Parte horizontal con monograma F y Á">
+      <svg class="seal" viewBox="0 0 240 240" aria-hidden="true">
+        <circle cx="120" cy="120" r="112" fill="none" stroke="#8a7344" stroke-width="1.5"/>
+        <circle cx="120" cy="120" r="104" fill="none" stroke="#8a7344" stroke-width=".75" stroke-dasharray="2 4"/>
+        <text x="96" y="148" font-size="108" fill="#1e2a44" text-anchor="middle">F</text>
+        <text x="146" y="166" font-size="108" fill="#8a7344" text-anchor="middle" font-style="italic">Á</text>
+        <path id="arc" d="M 40 120 A 80 80 0 0 0 200 120" fill="none"/>
+        <text font-size="11" letter-spacing="4" fill="#1e2a44"><textPath href="#arc" startOffset="50%" text-anchor="middle">XIII · III · MMXXVII</textPath></text>
+      </svg>
+      <div class="body">
+        <p class="small">Osvaldo Carmona Morales y Marcela Redard Ayala<br>Álvaro Galán Díaz y Paula Piazzano Zamorano</p>
+        <p class="caps">tienen el agrado de invitarle al matrimonio de</p>
+        <h2 class="names">Francisca Carmona Redard <span>y</span><br>Álvaro Galán Piazzano</h2>
+        <p class="small">Sábado 13 de marzo de 2027, 16:45 horas<br>Capilla del Colegio Cumbres, Av. La Plaza 1150, Las Condes</p>
+        <p class="small">Recepción 22:00 horas · Centro de Eventos Arboleda Chicureo</p>
+        <p class="caps">S.R.C. +56 9 8299 5134 · +56 9 8134 7187</p>
+      </div>
+    </div>
+    <figcaption>Imprenta 21 × 15 cm</figcaption>
+  </figure>
+  <figure>
+    <div class="card story" role="img" aria-label="Historia vertical con monograma">
+      <svg class="seal" viewBox="0 0 240 240" aria-hidden="true">
+        <circle cx="120" cy="120" r="112" fill="none" stroke="#8a7344" stroke-width="1.5"/>
+        <text x="96" y="148" font-size="108" fill="#1e2a44" text-anchor="middle">F</text>
+        <text x="146" y="166" font-size="108" fill="#8a7344" text-anchor="middle" font-style="italic">Á</text>
+      </svg>
+      <p class="caps">Nos casamos</p>
+      <h2 class="names">Francisca <span>y</span> Álvaro</h2>
+      <p class="small">13 de marzo de 2027<br>Capilla Colegio Cumbres · 16:45</p>
+    </div>
+    <figcaption>Historia 9:16</figcaption>
+  </figure>
+</main>
+</body>
+</html>

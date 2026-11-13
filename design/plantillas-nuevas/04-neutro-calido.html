@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plantilla Neutro cálido — propuesta</title>
+<style>
+  :root { --ink:#2b2420; --caramel:#9a6b43; --oat:#e9dfd2; --paper:#fffaf7; --bg:#ebe5de; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; color:#222; }
+  header { padding:28px 48px 0; display:flex; justify-content:space-between; align-items:baseline; }
+  header h1 { font-size:20px; font-weight:600; }
+  header p { font-size:14px; color:#4a4a4a; max-width:640px; }
+  main { display:flex; gap:40px; padding:24px 48px 48px; align-items:flex-start; }
+  figure { display:grid; gap:10px; }
+  figcaption { font-size:13px; color:#4a4a4a; }
+  .card { background:var(--paper); box-shadow:0 12px 32px rgba(0,0,0,.14); color:var(--ink); }
+  .landscape { width:868px; height:620px; display:grid; grid-template-columns:1fr 1px 1fr; gap:48px; padding:64px; align-items:center; }
+  .rule { background:var(--caramel); height:70%; }
+  .story { width:349px; height:620px; display:grid; align-content:space-between; padding:48px 32px; }
+  .serif { font-family:"Hoefler Text",Garamond,Georgia,serif; }
+  .names { font-size:52px; line-height:1.02; font-weight:400; }
+  .names .amp { color:var(--caramel); font-style:italic; }
+  .story .names { font-size:42px; }
+  .caps { font-size:10.5px; letter-spacing:.34em; text-transform:uppercase; color:var(--caramel); }
+  .small { font-size:13px; line-height:1.65; color:#4c423b; }
+  .block { display:grid; gap:4px; padding:14px 0; border-bottom:1px solid var(--oat); }
+  .block:last-child { border-bottom:0; }
+  .tag { display:inline-block; background:var(--oat); padding:6px 12px; font-size:11px; letter-spacing:.2em; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<header>
+  <h1>04 · Neutro cálido</h1>
+  <p>Marfil, caramelo y negro cálido. Dos columnas separadas por una línea fina: nombres a la izquierda, datos ordenados a la derecha.</p>
+</header>
+<main>
+  <figure>
+    <div class="card landscape" role="img" aria-label="Parte horizontal en tonos marfil y caramelo">
+      <div style="display:grid;gap:22px">
+        <p class="caps">Matrimonio</p>
+        <h2 class="names serif">Francisca<br><span class="amp">y</span> Álvaro</h2>
+        <p class="small">Con la bendición de sus padres<br>Osvaldo Carmona y Marcela Redard<br>Álvaro Galán y Paula Piazzano</p>
+        <span class="tag">13 · 03 · 2027</span>
+      </div>
+      <div class="rule" aria-hidden="true"></div>
+      <div>
+        <div class="block"><p class="caps">Ceremonia</p><p class="serif" style="font-size:19px">Capilla del Colegio Cumbres</p><p class="small">Av. La Plaza 1150, Las Condes · 16:45 horas</p></div>
+        <div class="block"><p class="caps">Recepción</p><p class="serif" style="font-size:19px">Centro de Eventos Arboleda Chicureo</p><p class="small">Alba 1 / 11640, Chicureo · 22:00 horas</p></div>
+        <div class="block"><p class="caps">Confirmar asistencia</p><p class="small">+56 9 8299 5134 · +56 9 8134 7187</p></div>
+        <div class="block"><p class="caps">Lista de regalos</p><p class="small">Novios Falabella · Código 2104134</p></div>
+      </div>
+    </div>
+    <figcaption>Imprenta 21 × 15 cm</figcaption>
+  </figure>
+  <figure>
+    <div class="card story" role="img" aria-label="Historia vertical en tonos marfil y caramelo">
+      <p class="caps">Matrimonio</p>
+      <h2 class="names serif">Francisca<br><span class="amp">y</span> Álvaro</h2>
+      <div><div class="block"><p class="caps">13 de marzo, 2027</p><p class="small">Capilla Colegio Cumbres · 16:45</p></div><div class="block"><p class="caps">Recepción</p><p class="small">Arboleda Chicureo · 22:00</p></div></div>
+    </div>
+    <figcaption>Historia 9:16</figcaption>
+  </figure>
+</main>
+</body>
+</html>

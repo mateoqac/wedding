@@ -1,0 +1,13 @@
+{
+  "title": "Plantillas nuevas",
+  "brief": "Seis nuevas plantillas de parte de matrimonio inspiradas en tendencias 2026 y en lo que ofrecen las imprentas chilenas; cada artboard muestra la versión imprenta 21x15 y la historia 9:16 con los mismos datos.",
+  "feature": "odd/tasks/wedding-invitation-designer.md",
+  "artboards": [
+    { "file": "01-editorial.html", "title": "Editorial", "tradeoff": "Muy actual y barata de construir (solo tipografía); puede sentirse fría para familias tradicionales", "width": 1440, "height": 760 },
+    { "file": "02-monograma.html", "title": "Monograma", "tradeoff": "Muy personal y elegante; las iniciales generadas necesitan casos borde (tildes, nombres compuestos)", "width": 1440, "height": 760 },
+    { "file": "03-botanica-neutra.html", "title": "Botánica neutra", "tradeoff": "La que más vende en Chile; las ilustraciones son el costo principal y deben ser propias o con licencia", "width": 1440, "height": 760 },
+    { "file": "04-neutro-calido.html", "title": "Neutro cálido", "tradeoff": "Se ve cara sin ornamentos y ordena bien los datos; menos 'romántica' que las florales", "width": 1440, "height": 760 },
+    { "file": "05-trazo-a-mano.html", "title": "Trazo a mano", "tradeoff": "Alegre y distinta para civil o aire libre; poco adecuada para ceremonias formales", "width": 1440, "height": 760 },
+    { "file": "06-encaje-vintage.html", "title": "Encaje vintage", "tradeoff": "Cubre la demanda 'vintage/calado' chilena; estética más recargada y menos de tendencia", "width": 1440, "height": 760 }
+  ]
+}

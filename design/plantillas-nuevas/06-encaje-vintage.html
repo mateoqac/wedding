@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plantilla Encaje vintage — propuesta</title>
+<style>
+  :root { --ink:#4a3a35; --rose:#b98a80; --lace:#d9c7bd; --paper:#fbf6f1; --bg:#ebe3dc; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; color:#222; }
+  header { padding:28px 48px 0; display:flex; justify-content:space-between; align-items:baseline; }
+  header h1 { font-size:20px; font-weight:600; }
+  header p { font-size:14px; color:#4a4a4a; max-width:640px; }
+  main { display:flex; gap:40px; padding:24px 48px 48px; align-items:flex-start; }
+  figure { display:grid; gap:10px; }
+  figcaption { font-size:13px; color:#4a4a4a; }
+  .card { background:var(--paper); box-shadow:0 12px 32px rgba(0,0,0,.14); color:var(--ink); position:relative; overflow:hidden; text-align:center; font-family:Baskerville,"Hoefler Text",Georgia,serif; }
+  .landscape { width:868px; height:620px; display:grid; align-content:center; justify-items:center; gap:12px; padding:80px 120px; }
+  .story { width:349px; height:620px; display:grid; align-content:center; justify-items:center; gap:14px; padding:70px 40px; }
+  .lace { position:absolute; inset:0; pointer-events:none; }
+  .script { font-family:"Snell Roundhand","Apple Chancery",cursive; font-size:56px; line-height:1.05; }
+  .story .script { font-size:40px; }
+  .small { font-size:15px; line-height:1.55; }
+  .caps { font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--rose); font-family:-apple-system,"Helvetica Neue",sans-serif; }
+  .flourish { width:160px; height:24px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>06 · Encaje vintage</h1>
+  <p>Borde de encaje calado repetido (patrón SVG), script caligráfico y tonos rosa viejo. Cubre la línea "vintage / calado" que piden en Chile.</p>
+</header>
+<main>
+  <figure>
+    <div class="card landscape" role="img" aria-label="Parte horizontal con borde de encaje">
+      <svg class="lace" width="868" height="620" aria-hidden="true">
+        <defs>
+          <pattern id="scallop" width="28" height="22" patternUnits="userSpaceOnUse">
+            <path d="M0 0 Q 14 22 28 0" fill="none" stroke="#d9c7bd" stroke-width="1.5"/>
+            <circle cx="14" cy="8" r="2.2" fill="none" stroke="#d9c7bd" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect x="18" y="18" width="832" height="22" fill="url(#scallop)"/>
+        <rect x="18" y="580" width="832" height="22" fill="url(#scallop)" transform="rotate(180 434 591)"/>
+        <rect x="34" y="46" width="800" height="528" fill="none" stroke="#b98a80" stroke-width="1"/>
+        <rect x="40" y="52" width="788" height="516" fill="none" stroke="#d9c7bd" stroke-width=".75" stroke-dasharray="1 3"/>
+      </svg>
+      <p class="small">Osvaldo Carmona Morales · Marcela Redard Ayala<br>Álvaro Galán Díaz · Paula Piazzano Zamorano</p>
+      <p class="caps">tienen el agrado de invitarle al matrimonio de sus hijos</p>
+      <h2 class="script">Francisca &amp; Álvaro</h2>
+      <svg class="flourish" viewBox="0 0 160 24" aria-hidden="true"><path d="M4 12 C 40 -4, 60 28, 80 12 C 100 -4, 120 28, 156 12" fill="none" stroke="#b98a80" stroke-width="1.2"/><circle cx="80" cy="12" r="3" fill="#b98a80"/></svg>
+      <p class="small">Sábado 13 de marzo de 2027, a las 16:45 horas<br>Capilla del Colegio Cumbres, Av. La Plaza 1150, Las Condes</p>
+      <p class="small">Y luego a la recepción, 22:00 horas · Centro de Eventos Arboleda Chicureo</p>
+      <p class="caps">S.R.C. +56 9 8299 5134 · +56 9 8134 7187</p>
+    </div>
+    <figcaption>Imprenta 21 × 15 cm</figcaption>
+  </figure>
+  <figure>
+    <div class="card story" role="img" aria-label="Historia vertical con borde de encaje">
+      <svg class="lace" width="349" height="620" aria-hidden="true">
+        <defs><pattern id="scallop2" width="24" height="20" patternUnits="userSpaceOnUse"><path d="M0 0 Q 12 20 24 0" fill="none" stroke="#d9c7bd" stroke-width="1.5"/><circle cx="12" cy="7" r="2" fill="none" stroke="#d9c7bd"/></pattern></defs>
+        <rect x="14" y="14" width="321" height="20" fill="url(#scallop2)"/>
+        <rect x="14" y="586" width="321" height="20" fill="url(#scallop2)" transform="rotate(180 174.5 596)"/>
+        <rect x="26" y="40" width="297" height="540" fill="none" stroke="#b98a80"/>
+      </svg>
+      <p class="caps">Nos casamos</p>
+      <h2 class="script">Francisca<br>&amp; Álvaro</h2>
+      <svg class="flourish" viewBox="0 0 160 24" aria-hidden="true"><path d="M4 12 C 40 -4, 60 28, 80 12 C 100 -4, 120 28, 156 12" fill="none" stroke="#b98a80" stroke-width="1.2"/><circle cx="80" cy="12" r="3" fill="#b98a80"/></svg>
+      <p class="small">13 de marzo de 2027<br>Capilla Colegio Cumbres · 16:45</p>
+    </div>
+    <figcaption>Historia 9:16</figcaption>
+  </figure>
+</main>
+</body>
+</html>

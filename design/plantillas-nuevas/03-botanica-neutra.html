@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plantilla Botánica neutra — propuesta</title>
+<style>
+  :root { --ink:#3f4a3c; --leaf:#8a9a7b; --leaf2:#b5c0a6; --gold:#b39a62; --paper:#fbf9f4; --bg:#e6e8e1; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; color:#222; }
+  header { padding:28px 48px 0; display:flex; justify-content:space-between; align-items:baseline; }
+  header h1 { font-size:20px; font-weight:600; }
+  header p { font-size:14px; color:#4a4a4a; max-width:640px; }
+  main { display:flex; gap:40px; padding:24px 48px 48px; align-items:flex-start; }
+  figure { display:grid; gap:10px; }
+  figcaption { font-size:13px; color:#4a4a4a; }
+  .card { background:var(--paper); box-shadow:0 12px 32px rgba(0,0,0,.14); color:var(--ink); position:relative; overflow:hidden; text-align:center; font-family:"Cormorant Garamond",Garamond,"Hoefler Text",Georgia,serif; }
+  .landscape { width:868px; height:620px; display:grid; align-content:center; justify-items:center; gap:12px; padding:70px 170px; }
+  .story { width:349px; height:620px; display:grid; align-content:center; justify-items:center; gap:14px; padding:150px 34px 120px; }
+  .sprig { position:absolute; }
+  .script { font-family:"Snell Roundhand","Apple Chancery",cursive; font-size:58px; line-height:1.05; color:var(--ink); }
+  .story .script { font-size:40px; }
+  .small { font-size:16px; line-height:1.5; }
+  .caps { font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); font-family:-apple-system,"Helvetica Neue",sans-serif; }
+  hr { width:60px; border:0; border-top:1px solid var(--gold); }
+</style>
+</head>
+<body>
+<header>
+  <h1>03 · Botánica neutra</h1>
+  <p>Eucalipto y helecho en verde salvia apagado en las esquinas; script caligráfico para los nombres y detalle dorado suave.</p>
+</header>
+<main>
+  <figure>
+    <div class="card landscape" role="img" aria-label="Parte horizontal con ramas de eucalipto en las esquinas">
+      <svg class="sprig" style="left:-10px;top:-10px;width:260px;height:260px" viewBox="0 0 200 200" aria-hidden="true">
+        <path d="M10 10 C 60 40, 110 80, 170 170" stroke="#8a9a7b" stroke-width="2" fill="none"/>
+        <g fill="#8a9a7b" opacity=".85"><ellipse cx="40" cy="30" rx="16" ry="10" transform="rotate(30 40 30)"/><ellipse cx="62" cy="54" rx="18" ry="11" transform="rotate(-20 62 54)"/><ellipse cx="88" cy="70" rx="18" ry="11" transform="rotate(40 88 70)"/><ellipse cx="108" cy="98" rx="17" ry="10" transform="rotate(-15 108 98)"/><ellipse cx="132" cy="118" rx="16" ry="10" transform="rotate(45 132 118)"/></g>
+        <g fill="#b5c0a6"><ellipse cx="30" cy="54" rx="14" ry="8" transform="rotate(70 30 54)"/><ellipse cx="74" cy="34" rx="13" ry="8" transform="rotate(10 74 34)"/><ellipse cx="120" cy="80" rx="13" ry="8" transform="rotate(10 120 80)"/><ellipse cx="150" cy="140" rx="13" ry="8" transform="rotate(60 150 140)"/></g>
+      </svg>
+      <svg class="sprig" style="right:-10px;bottom:-10px;width:260px;height:260px;transform:rotate(180deg)" viewBox="0 0 200 200" aria-hidden="true">
+        <path d="M10 10 C 60 40, 110 80, 170 170" stroke="#8a9a7b" stroke-width="2" fill="none"/>
+        <g fill="#8a9a7b" opacity=".85"><ellipse cx="40" cy="30" rx="16" ry="10" transform="rotate(30 40 30)"/><ellipse cx="62" cy="54" rx="18" ry="11" transform="rotate(-20 62 54)"/><ellipse cx="88" cy="70" rx="18" ry="11" transform="rotate(40 88 70)"/><ellipse cx="108" cy="98" rx="17" ry="10" transform="rotate(-15 108 98)"/></g>
+        <g fill="#b5c0a6"><ellipse cx="30" cy="54" rx="14" ry="8" transform="rotate(70 30 54)"/><ellipse cx="74" cy="34" rx="13" ry="8" transform="rotate(10 74 34)"/><ellipse cx="120" cy="80" rx="13" ry="8" transform="rotate(10 120 80)"/></g>
+      </svg>
+      <p class="small">Osvaldo Carmona Morales · Marcela Redard Ayala<br>Álvaro Galán Díaz · Paula Piazzano Zamorano</p>
+      <p class="caps">tienen el agrado de invitarle al matrimonio de sus hijos</p>
+      <h2 class="script">Francisca &amp; Álvaro</h2>
+      <hr>
+      <p class="small">Sábado 13 de marzo de 2027 · 16:45 horas<br>Capilla del Colegio Cumbres, Av. La Plaza 1150, Las Condes</p>
+      <p class="small">Recepción 22:00 horas · Centro de Eventos Arboleda Chicureo</p>
+      <p class="caps">S.R.C. +56 9 8299 5134 · +56 9 8134 7187</p>
+    </div>
+    <figcaption>Imprenta 21 × 15 cm</figcaption>
+  </figure>
+  <figure>
+    <div class="card story" role="img" aria-label="Historia vertical con corona de eucalipto">
+      <svg class="sprig" style="left:50%;top:10px;width:300px;height:150px;transform:translateX(-50%)" viewBox="0 0 300 150" aria-hidden="true">
+        <path d="M20 120 Q 150 -20 280 120" stroke="#8a9a7b" stroke-width="2" fill="none"/>
+        <g fill="#8a9a7b"><ellipse cx="60" cy="72" rx="15" ry="9" transform="rotate(-40 60 72)"/><ellipse cx="100" cy="44" rx="15" ry="9" transform="rotate(-20 100 44)"/><ellipse cx="150" cy="34" rx="15" ry="9"/><ellipse cx="200" cy="44" rx="15" ry="9" transform="rotate(20 200 44)"/><ellipse cx="240" cy="72" rx="15" ry="9" transform="rotate(40 240 72)"/></g>
+        <g fill="#b5c0a6"><ellipse cx="80" cy="60" rx="11" ry="7" transform="rotate(60 80 60)"/><ellipse cx="125" cy="40" rx="11" ry="7" transform="rotate(80 125 40)"/><ellipse cx="175" cy="38" rx="11" ry="7" transform="rotate(100 175 38)"/><ellipse cx="220" cy="58" rx="11" ry="7" transform="rotate(120 220 58)"/></g>
+      </svg>
+      <p class="caps">Nos casamos</p>
+      <h2 class="script">Francisca<br>&amp; Álvaro</h2>
+      <hr>
+      <p class="small">13 de marzo de 2027<br>Capilla Colegio Cumbres · 16:45</p>
+    </div>
+    <figcaption>Historia 9:16</figcaption>
+  </figure>
+</main>
+</body>
+</html>

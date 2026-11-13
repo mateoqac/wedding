@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plantilla Editorial — propuesta</title>
+<style>
+  :root { --ink:#141414; --muted:#6b6b6b; --paper:#fbfaf8; --bg:#e9e7e3; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; color:var(--ink); }
+  header { padding:28px 48px 0; display:flex; justify-content:space-between; align-items:baseline; }
+  header h1 { font-size:20px; font-weight:600; }
+  header p { font-size:14px; color:#4a4a4a; max-width:640px; }
+  main { display:flex; gap:40px; padding:24px 48px 48px; align-items:flex-start; }
+  figure { display:grid; gap:10px; }
+  figcaption { font-size:13px; color:#4a4a4a; }
+  .card { background:var(--paper); box-shadow:0 12px 32px rgba(0,0,0,.14); position:relative; overflow:hidden; }
+  .landscape { width:868px; height:620px; padding:56px 64px; display:grid; grid-template-rows:auto 1fr auto; }
+  .story { width:349px; height:620px; padding:40px 28px; display:grid; grid-template-rows:auto 1fr auto; text-align:center; }
+  .kicker { font-size:11px; letter-spacing:.42em; text-transform:uppercase; color:var(--muted); }
+  .names { font-family:Didot,"Bodoni 72","Bodoni MT",Georgia,serif; font-weight:400; line-height:.92; letter-spacing:-.02em; align-self:center; }
+  .landscape .names { font-size:96px; }
+  .names em { font-style:italic; font-size:.5em; display:block; margin:.25em 0; letter-spacing:0; color:var(--muted); }
+  .story .names { font-size:48px; }
+  .date { font-family:Didot,"Bodoni 72",Georgia,serif; font-size:15px; letter-spacing:.5em; text-transform:uppercase; }
+  .details { display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px; border-top:1px solid var(--ink); padding-top:18px; font-size:12px; line-height:1.55; }
+  .details h2 { font-size:10px; letter-spacing:.3em; text-transform:uppercase; font-weight:600; margin-bottom:6px; }
+  .parents { display:flex; justify-content:space-between; font-size:12px; line-height:1.5; color:var(--muted); }
+  .story .details { grid-template-columns:1fr; gap:14px; text-align:center; }
+  .story .parents { flex-direction:column; gap:8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>01 · Editorial</h1>
+  <p>Tipografía Didone a escala de portada; sin ornamentos. Datos en sans fina, separados por una sola línea.</p>
+</header>
+<main>
+  <figure>
+    <div class="card landscape" role="img" aria-label="Parte horizontal estilo editorial">
+      <div class="parents"><p>Osvaldo Carmona Morales<br>Marcela Redard Ayala</p><p class="kicker" style="align-self:center">Tienen el agrado de invitarle</p><p style="text-align:right">Álvaro Galán Díaz<br>Paula Piazzano Zamorano</p></div>
+      <h2 class="names">Francisca Carmona<em>&amp;</em>Álvaro Galán</h2>
+      <div>
+        <p class="date" style="margin-bottom:18px">Sábado 13 · Marzo · 2027</p>
+        <div class="details">
+          <div><h2>Ceremonia</h2>Capilla del Colegio Cumbres<br>Av. La Plaza 1150, Las Condes<br>16:45 horas</div>
+          <div><h2>Recepción</h2>Centro de Eventos Arboleda<br>Alba 1 / 11640, Chicureo<br>22:00 horas</div>
+          <div><h2>S.R.C.</h2>+56 9 8299 5134<br>+56 9 8134 7187<br>Santiago, enero 2027</div>
+        </div>
+      </div>
+    </div>
+    <figcaption>Imprenta 21 × 15 cm</figcaption>
+  </figure>
+  <figure>
+    <div class="card story" role="img" aria-label="Historia vertical estilo editorial">
+      <p class="kicker">Nos casamos</p>
+      <h2 class="names">Francisca<em>&amp;</em>Álvaro</h2>
+      <div>
+        <p class="date" style="font-size:12px;margin-bottom:16px">13 · 03 · 2027</p>
+        <div class="details"><div><h2>Ceremonia</h2>Capilla Colegio Cumbres · 16:45</div><div><h2>Recepción</h2>Arboleda Chicureo · 22:00</div></div>
+      </div>
+    </div>
+    <figcaption>Historia 9:16</figcaption>
+  </figure>
+</main>
+</body>
+</html>
