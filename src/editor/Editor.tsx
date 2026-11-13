@@ -103,8 +103,8 @@ function OptionGroup({
 }) {
   return (
     <div className="grid gap-1.5" role="radiogroup" aria-label={spec.label}>
-      <span className="text-sm font-medium">{spec.label}</span>
-      <div className="flex flex-wrap gap-2">
+      <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{spec.label}</span>
+      <div className="flex flex-wrap gap-1.5">
         {Object.entries(spec.choices).map(([key, text]) => (
           <Button
             key={key}
@@ -269,16 +269,6 @@ export default function Editor({ invitationId, initialData, initialOptions, opti
           <Field label="Lista de regalos: enlace (https)" name="giftUrl" type="url" value={form.giftUrl} onChange={set("giftUrl")} error={errors.giftUrl} />
           <Field label="Dirección para el sobre" name="envelopeAddress" value={form.envelopeAddress} onChange={set("envelopeAddress")} error={errors.envelopeAddress} />
         </Section>
-        <Section title="Estilo">
-          {optionSpecs.map((spec) => (
-            <OptionGroup
-              key={spec.name}
-              spec={spec}
-              value={options[spec.name]}
-              onChange={(v) => setOptions((o) => ({ ...o, [spec.name]: v }))}
-            />
-          ))}
-        </Section>
       </form>
 
       <section className="grid content-start gap-4 lg:sticky lg:top-6" aria-label="Vista previa">
@@ -289,6 +279,17 @@ export default function Editor({ invitationId, initialData, initialOptions, opti
             </Button>
           ))}
         </div>
+        {/* Style options live next to the preview: they change what you see, the form changes the content. */}
+        <section className="flex flex-wrap gap-x-8 gap-y-4 rounded-lg border px-4 py-3.5" aria-label="Estilo">
+          {optionSpecs.map((spec) => (
+            <OptionGroup
+              key={spec.name}
+              spec={spec}
+              value={options[spec.name]}
+              onChange={(v) => setOptions((o) => ({ ...o, [spec.name]: v }))}
+            />
+          ))}
+        </section>
         <div className="relative grid min-h-64 place-items-center rounded-lg border bg-muted/40 p-4">
           {lastGood ? (
             <img src={lastGood.url} alt="Vista previa de la invitación con marca de agua" className={`max-h-[75vh] w-auto shadow-md transition-opacity ${preview.status === "loading" ? "opacity-60" : ""}`} />

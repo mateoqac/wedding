@@ -124,53 +124,50 @@ input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{
           </div>
         </fieldset>
 
-        <fieldset style="margin: 0; padding: 16px; border: 1px solid #E6E2DC; border-radius: 10px; display: flex; flex-direction: column; gap: 16px">
-          <legend style="padding: 0 4px; font-size: 14px; font-weight: 600">Estilo</legend>
-
-          <div role="radiogroup" aria-label="Tipografía" style="display: flex; flex-direction: column; gap: 6px">
-            <span style="font-size: 14px; font-weight: 500">Tipografía</span>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px">
-              <sc-for list="{{fonts}}" as="opt" hint-placeholder-count="3">
-                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
-              </sc-for>
-            </div>
-          </div>
-
-          <div role="radiogroup" aria-label="Color" style="display: flex; flex-direction: column; gap: 6px">
-            <span style="font-size: 14px; font-weight: 500">Color</span>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px">
-              <sc-for list="{{colors}}" as="opt" hint-placeholder-count="3">
-                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
-              </sc-for>
-            </div>
-          </div>
-
-          <div role="radiogroup" aria-label="Emblema" style="display: flex; flex-direction: column; gap: 6px">
-            <span style="font-size: 14px; font-weight: 500">Emblema</span>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px">
-              <sc-for list="{{emblems}}" as="opt" hint-placeholder-count="2">
-                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
-              </sc-for>
-            </div>
-          </div>
-
-          <div role="radiogroup" aria-label="Marco" style="display: flex; flex-direction: column; gap: 6px">
-            <span style="font-size: 14px; font-weight: 500">Marco</span>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px">
-              <sc-for list="{{frames}}" as="opt" hint-placeholder-count="2">
-                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
-              </sc-for>
-            </div>
-          </div>
-        </fieldset>
       </form>
 
       <section aria-label="Vista previa" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+        <p style="margin: 0; font-size: 13px; color: #78716A">Los cambios de estilo se ven aquí al instante; los datos de la izquierda se guardan solos.</p>
         <div role="tablist" aria-label="Formato" style="display: flex; flex-wrap: wrap; gap: 8px">
           <sc-for list="{{formats}}" as="f" hint-placeholder-count="5">
             <button type="button" role="tab" aria-selected="{{f.selected}}" onClick="{{f.pick}}" style="{{f.style}}">{{f.label}}</button>
           </sc-for>
         </div>
+
+        <section aria-label="Estilo" style="display: flex; flex-wrap: wrap; gap: 16px 32px; padding: 14px 16px; border: 1px solid #E6E2DC; border-radius: 10px">
+          <div role="radiogroup" aria-label="Tipografía" style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #78716A">Tipografía</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              <sc-for list="{{fonts}}" as="opt" hint-placeholder-count="3">
+                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div role="radiogroup" aria-label="Color" style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #78716A">Color</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              <sc-for list="{{colors}}" as="opt" hint-placeholder-count="3">
+                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div role="radiogroup" aria-label="Emblema" style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #78716A">Emblema</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              <sc-for list="{{emblems}}" as="opt" hint-placeholder-count="2">
+                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div role="radiogroup" aria-label="Marco" style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #78716A">Marco</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              <sc-for list="{{frames}}" as="opt" hint-placeholder-count="2">
+                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+        </section>
 
         <div style="position: relative; display: flex; align-items: center; justify-content: center; min-height: 256px; padding: 32px; border: 1px solid #E6E2DC; border-radius: 10px; background: #FBFAF8">
           <sc-if value="{{landscape}}" hint-placeholder-val="{{true}}">
@@ -233,7 +230,7 @@ input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{
   </main>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1560}}'>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1480}}'>
 class Component extends DCLogic {
   constructor(props) {
     super(props);
