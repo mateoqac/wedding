@@ -35,7 +35,9 @@ function buildEmailSender(db: Database): EmailSender {
 }
 
 function buildStorage(baseUrl: string) {
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  // Only inside Vercel: `vercel link` also writes the Blob token to the local env file,
+  // which local dev must ignore so files stay on disk.
+  if (process.env.VERCEL && process.env.BLOB_READ_WRITE_TOKEN) {
     return createBlobStorage({ signingSecret: env("FILE_SIGNING_SECRET"), baseUrl });
   }
   if (process.env.R2_BUCKET) {
