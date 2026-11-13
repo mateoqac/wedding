@@ -4,6 +4,7 @@ Public web app where couples in Chile design their wedding invitation ("parte de
 
 - Design: `docs/superpowers/specs/2026-11-12-wedding-invitation-designer-design.md`
 - Task log: `odd/tasks/wedding-invitation-designer.md`
+- Design system and template rules: `DESIGN.md`
 
 ## Requirements
 
