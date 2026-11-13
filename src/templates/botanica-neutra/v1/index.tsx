@@ -65,6 +65,8 @@ hr{width:calc(var(--u)*6);border:0;border-top:1px solid ${GOLD}}
 a{color:${INK}}`;
   return (
     <Page format={format} background="#fbf9f4" css={css}>
+      {/* Decorations bleed off the edge on purpose; this layer clips them so only text counts as overflow. */}
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
       {corona ? (
         <Wreath dark={dark} light={light} style={g.story ? { left: "8%", top: "6%", width: "84%" } : { left: "34%", top: "3%", width: "32%" }} />
       ) : (
@@ -73,6 +75,7 @@ a{color:${INK}}`;
           <Sprig dark={dark} light={light} style={{ right: "-1%", bottom: "-1%", width: "28%", transform: "rotate(180deg)" }} />
         </>
       )}
+      </div>
       {g.story ? <p className="caps">Nos casamos</p> : (
         <>
           <p className="small" data-block="parents">{data.parentsOne.join(" · ")}<br />{data.parentsTwo.join(" · ")}</p>

@@ -15,6 +15,8 @@ import { invitationDataSchema as clasicoData } from "./clasico-marco-doble/v1/sc
 import { Template as ClasicoTemplate } from "./clasico-marco-doble/v1/Template";
 import { editorialV1 } from "./editorial/v1";
 import { monogramaV1 } from "./monograma/v1";
+import { botanicaNeutraV1 } from "./botanica-neutra/v1";
+import { neutroCalidoV1 } from "./neutro-calido/v1";
 
 /** Template-independent facts the domain needs from an invitation's data. */
 export interface InvitationFacts {
@@ -70,6 +72,8 @@ const TEMPLATES: Record<string, Record<number, TemplateModule>> = {
   },
   editorial: { 1: editorialV1 },
   monograma: { 1: monogramaV1 },
+  "botanica-neutra": { 1: botanicaNeutraV1 },
+  "neutro-calido": { 1: neutroCalidoV1 },
 };
 
 export function getTemplate(templateId: string, templateVersion: number): TemplateModule {
