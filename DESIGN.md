@@ -27,7 +27,7 @@ rather than as a system panel. Dark mode keeps the plain neutral values.
 | `--background` | `oklch(0.993 0.003 80)` | `oklch(0.145 0 0)` | Page background |
 | `--foreground` | `oklch(0.17 0.008 60)` | `oklch(0.985 0 0)` | Body text |
 | `--primary` / `--primary-foreground` | `oklch(0.22 0.008 60)` / `oklch(0.985 0.003 80)` | inverted | Primary buttons ("Usar esta plantilla", "Pagar") |
-| `--muted` / `--muted-foreground` | `oklch(0.965 0.005 80)` / `oklch(0.55 0.012 60)` | `oklch(0.269 0 0)` / `oklch(0.708 0 0)` | Secondary text, preview canvas background |
+| `--muted` / `--muted-foreground` | `oklch(0.965 0.005 80)` / `oklch(0.54 0.012 60)` (≥ 4.5:1 on muted and background) | `oklch(0.269 0 0)` / `oklch(0.708 0 0)` | Secondary text, preview canvas background |
 | `--accent` | `oklch(0.965 0.005 80)` | `oklch(0.269 0 0)` | Hover surfaces |
 | `--destructive` | `oklch(0.577 0.245 27.325)` | `oklch(0.704 0.191 22.216)` | Field errors, alerts |
 | `--border` | `oklch(0.915 0.008 80)` | `oklch(1 0 0 / 10%)` | Cards, inputs, dividers |

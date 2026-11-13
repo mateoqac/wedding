@@ -58,7 +58,7 @@
     --secondary: oklch(0.965 0.005 80);
     --secondary-foreground: oklch(0.22 0.008 60);
     --muted: oklch(0.965 0.005 80);
-    --muted-foreground: oklch(0.55 0.012 60);
+    --muted-foreground: oklch(0.54 0.012 60);
     --accent: oklch(0.965 0.005 80);
     --accent-foreground: oklch(0.22 0.008 60);
     --destructive: oklch(0.577 0.245 27.325);
