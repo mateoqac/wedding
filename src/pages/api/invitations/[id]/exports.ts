@@ -13,6 +13,6 @@ export const POST: APIRoute = async ({ params, request, cookies, locals }) => {
   if (!FORMATS.includes(body.format as Format)) return json({ status: "invalid_format" }, 400);
   await container.bossReady;
   const result = await container.exports.requestExport({ invitationId: id, format: body.format as Format });
-  const status = { ready: 200, queued: 202, not_paid: 402, not_found: 404, rate_limited: 429 }[result.status];
+  const status = { ready: 200, queued: 202, not_paid: 402, not_found: 404, rate_limited: 429, failed: 502 }[result.status];
   return json(result, status);
 };

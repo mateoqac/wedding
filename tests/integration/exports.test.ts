@@ -150,4 +150,25 @@ describe("export pipeline", () => {
     });
     expect(await limited.requestExport({ invitationId: id, format: "jpg" })).toEqual({ status: "rate_limited" });
   });
+
+  it("inline mode renders in the request, stores once and reuses the file (no queue)", async () => {
+    const id = await insertInvitation("paid");
+    const inline = createExportService({
+      db: testDb.db,
+      renderClient,
+      storage: createLocalStorage({ directory: dir, signingSecret: "s", baseUrl: "https://partes.example" }),
+      mode: "inline",
+    });
+    const first = await inline.requestExport({ invitationId: id, format: "png" });
+    expect(first.status).toBe("ready");
+    const second = await inline.requestExport({ invitationId: id, format: "png" });
+    expect(second.status).toBe("ready");
+    expect(renders).toBe(1);
+    expect(await testDb.db.select().from(exportsTable).where(eq(exportsTable.invitationId, id))).toHaveLength(1);
+
+    failNext = 1;
+    const other = await inline.requestExport({ invitationId: id, format: "jpg" });
+    expect(other).toEqual({ status: "failed" });
+  });
 });
+

@@ -13,7 +13,9 @@ export type ExportRequestResult =
   | { status: "queued"; jobId: string | null }
   | { status: "not_paid" }
   | { status: "not_found" }
-  | { status: "rate_limited" };
+  | { status: "rate_limited" }
+  /** Inline mode only: the render failed in this request; the user can retry. */
+  | { status: "failed" };
 
 interface ExportJob {
   invitationId: string;
@@ -41,12 +43,16 @@ export function createExportService({
   renderClient,
   storage,
   allowExportEnqueue = async () => true,
+  mode = "queue",
 }: {
   db: Database;
-  boss: PgBoss;
+  /** Required in queue mode; unused in inline mode. */
+  boss?: PgBoss;
   renderClient: RenderClient;
   storage: FileStorage;
   allowExportEnqueue?: (invitationId: string) => Promise<boolean>;
+  /** "queue": pg-boss worker (default). "inline": render inside the request (serverless). */
+  mode?: "queue" | "inline";
 }): ExportService {
   let workerStarted = false;
 
@@ -115,6 +121,17 @@ export function createExportService({
 
       if (!(await allowExportEnqueue(invitationId))) return { status: "rate_limited" };
       const job: ExportJob = { invitationId, format, contentHash: hash };
+      if (mode === "inline") {
+        try {
+          await runJob(job);
+        } catch (error) {
+          console.error("inline export failed", error);
+          return { status: "failed" };
+        }
+        const stored = await findExport(invitationId, format, hash);
+        return stored ? { status: "ready", url: await storage.signedUrl(stored.r2Key) } : { status: "failed" };
+      }
+      if (!boss) throw new Error("Queue mode requires pg-boss");
       const jobId = await boss.send(EXPORT_QUEUE, job, {
         singletonKey: exportSingletonKey(invitationId, format, hash),
       });
@@ -122,7 +139,7 @@ export function createExportService({
     },
 
     async startWorker() {
-      if (workerStarted) return;
+      if (workerStarted || mode === "inline" || !boss) return;
       workerStarted = true;
       await boss.work<ExportJob>(EXPORT_QUEUE, { pollingIntervalSeconds: 0.5 }, async (jobs) => {
         for (const job of jobs) await runJob(job.data);

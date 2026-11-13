@@ -38,6 +38,10 @@ Branch: feat/foundation. Delivery strategy: ask-on-risk → chain strategy: stac
 | T18 | S2, S4 | Template `trazo-a-mano/v1` (05) with original SVG strokes | inline | done | 720c57b4 |
 | T19 | S2, S4 | Template `encaje-vintage/v1` (06) with SVG lace pattern | inline | done | 57ec750f |
 
+| V1 | S4, S9 | vercel-demo: Vercel adapter, in-process render with serverless Chromium (@sparticuz/chromium), lazy pg-boss | inline | pending | |
+| V2 | S4, S9 | vercel-demo: inline exports (no queue), Vercel Blob private storage behind signed app URLs, Vercel Cron draft cleanup | inline | pending | |
+| V3 | S5, S8 | vercel-demo: database-backed fake gateway (serverless-safe) and demo mode that shows the access link on screen | inline | pending | |
+| V4 | S9 | vercel-demo: provision Neon + Blob, env vars, migrations, deploy and smoke test | inline | pending | |
 Out of MVP: boleta electrónica and print shop validation (print values fixed: 21x15 cm, 3 mm bleed, RGB).
 
 ## Log
@@ -85,3 +89,4 @@ Out of MVP: boleta electrónica and print shop validation (print values fixed: 2
 - User: "navvegar en internet para buscar y crear mas plantillas" → web research (Paperless Post 2026 trends, e-invitationwedding 2026 editorial report, Chilean print shops: clásico, rústico/kraft, vintage/calado, floral acuarela). User chose "todas": design/plantillas-nuevas/ with 6 artboards (01-editorial, 02-monograma, 03-botanica-neutra, 04-neutro-calido, 05-trazo-a-mano, 06-encaje-vintage), each showing print 21x15 and story 9:16. No artboard chosen yet; implementation not started. Artboards use macOS system fonts as stand-ins; implementation would use OFL fonts (e.g. Bodoni Moda, Inter) bundled like D1.
 - User: "me gustaron todas!!! que lindo" → implement all six directions (T13–T19). New templates reuse the clasico v1 data schema and fixtures (same fields), each with its own options and fonts (OFL via @fontsource).
 - T13–T19 closed: 7 templates registered; contract tests 228 unit total, templates:check 105/105 without overflow, 90 new visual baselines (pinned image) and existing clasico baselines unchanged, 53 integration, E2E 2/2, build ok. Commit hygiene: a28beb34 (monograma) also captured botanica-neutra and neutro-calido sources because files were written in parallel with `git add -A`; history kept as is (content correct). Visual scripts call node_modules/.bin/playwright because `pnpm exec` re-ran install inside the container.
+- User: "esta app es un MPV para mostrarle algun cliente, podemos cambiar elc odigo (en un nuevo branch si queres, para no tcar main) y meter todo en vercel? es posible?" then "si, dale, yo tengo la cuenta en vercel." → branch vercel-demo (main untouched), tasks V1–V4. Verified: Vercel Blob Hobby 1 GB + private blobs/signed URLs GA; Neon Free 1 GB + 100 CU-h; @sparticuz/chromium 153 with playwright-core (Playwright 1.65 expects Chromium 158: to be confirmed on first deploy). Vercel CLI logged in as mateoqac. Tradeoff accepted: no pinned Docker Chromium on this branch, previews cold-start a few seconds.

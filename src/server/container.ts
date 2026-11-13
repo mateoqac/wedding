@@ -4,6 +4,7 @@ import type { EmailSender } from "@/auth/email-sender";
 import { FileOutboxEmailSender } from "@/auth/file-outbox-email-sender";
 import { ResendEmailSender } from "@/auth/resend-email-sender";
 import { createDatabase } from "@/db/client";
+import { createBlobStorage } from "@/exports/blob-storage";
 import { createExportService } from "@/exports/export-service";
 import { createLocalStorage } from "@/exports/local-storage";
 import { createExportQueue } from "@/exports/queue";
@@ -14,6 +15,7 @@ import { FakePaymentGateway } from "@/payments/fake-payment-gateway";
 import type { PaymentGateway } from "@/payments/payment-gateway";
 import { createPaymentService } from "@/payments/payment-service";
 import { createRateLimiter } from "@/rate-limits/rate-limiter";
+import { createInProcessRenderClient } from "@/render/in-process-client";
 import { createRenderClient } from "@/render/render-client";
 
 const env = (name: string, fallback?: string) => {
@@ -29,6 +31,9 @@ function buildEmailSender(): EmailSender {
 }
 
 function buildStorage(baseUrl: string) {
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    return createBlobStorage({ signingSecret: env("FILE_SIGNING_SECRET"), baseUrl });
+  }
   if (process.env.R2_BUCKET) {
     return createR2Storage({
       accountId: env("R2_ACCOUNT_ID"),
@@ -54,19 +59,28 @@ function buildGateway(): PaymentGateway {
 function createContainer() {
   const baseUrl = env("BASE_URL", "http://localhost:4321");
   const databaseUrl = env("DATABASE_URL", "postgres://wedding:wedding@localhost:5433/wedding");
-  const { db } = createDatabase(databaseUrl);
+  const { db } = createDatabase(databaseUrl, { serverless: !!process.env.VERCEL });
   const rateLimiter = createRateLimiter({ db });
   const email = buildEmailSender();
   const auth = createAuthService({ db, email, baseUrl, allowAccessLinkEmail: rateLimiter.allowAccessLinkEmail });
   const gateway = buildGateway();
   const paymentService = createPaymentService({ db, gateway });
   const storage = buildStorage(baseUrl);
+  // "http": separate render services (Docker workers). "inprocess": render inside the web
+  // process with a shared browser (serverless deployments such as Vercel).
+  const inProcess = env("RENDER_TRANSPORT", "http") === "inprocess";
   const workerSecret = env("WORKER_SECRET", "dev-worker-secret");
-  const previewClient = createRenderClient({ baseUrl: env("PREVIEW_URL", "http://127.0.0.1:4101"), secret: workerSecret });
-  const exportClient = createRenderClient({ baseUrl: env("EXPORT_URL", "http://127.0.0.1:4102"), secret: workerSecret });
-  const boss = new PgBoss({ connectionString: databaseUrl });
-  boss.on("error", (error) => console.error("pg-boss", error));
-  const bossReady = boss.start().then(() => createExportQueue(boss)).then(() => boss);
+  const previewClient = inProcess
+    ? createInProcessRenderClient({ mode: "preview" })
+    : createRenderClient({ baseUrl: env("PREVIEW_URL", "http://127.0.0.1:4101"), secret: workerSecret });
+  const exportClient = inProcess
+    ? createInProcessRenderClient({ mode: "export" })
+    : createRenderClient({ baseUrl: env("EXPORT_URL", "http://127.0.0.1:4102"), secret: workerSecret });
+  // "queue": pg-boss worker. "inline": render downloads inside the request (no long-lived process).
+  const exportMode = env("EXPORT_MODE", "queue") === "inline" ? "inline" : "queue";
+  const boss = exportMode === "queue" ? new PgBoss({ connectionString: databaseUrl }) : undefined;
+  boss?.on("error", (error) => console.error("pg-boss", error));
+  const bossReady = boss ? boss.start().then(() => createExportQueue(boss)).then(() => boss) : Promise.resolve(undefined);
 
   const invitations = createInvitationService({
     db,
@@ -81,12 +95,13 @@ function createContainer() {
   const exports = createExportService({
     db,
     boss,
+    mode: exportMode,
     renderClient: exportClient,
     storage,
     allowExportEnqueue: rateLimiter.allowExportEnqueue,
   });
   // Background jobs run in the web process unless RUN_JOBS=false (then run them elsewhere).
-  if (process.env.RUN_JOBS !== "false") {
+  if (boss && process.env.RUN_JOBS !== "false") {
     void bossReady
       .then(async () => {
         await exports.startWorker();

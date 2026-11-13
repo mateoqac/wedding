@@ -26,6 +26,8 @@ export const GET: APIRoute = async ({ params, cookies, locals, redirect }) => {
       return page("<h1>Preparando tu archivo…</h1><p>Esto toma unos segundos. La descarga comenzará sola.</p>", true);
     case "not_paid":
       return redirect(`/invitaciones/${id}/pagar`, 303);
+    case "failed":
+      return page(`<h1>No pudimos generar el archivo</h1><p>Intenta de nuevo en unos segundos.</p><p><a href="">Reintentar</a></p>`);
     case "rate_limited":
       return page("<h1>Demasiadas descargas</h1><p>Intenta de nuevo en una hora.</p>");
     default:
