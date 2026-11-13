@@ -25,6 +25,9 @@ export const PUT: APIRoute = async ({ params, request, cookies, locals }) => {
   switch (result.status) {
     case "saved":
       return json({ status: "saved" });
+    case "saved_incomplete":
+      // Saved; the issues tell the editor which fields are still missing.
+      return json({ status: "incomplete", issues: result.issues });
     case "invalid":
       return json({ status: "invalid", issues: result.issues }, 422);
     case "not_found":

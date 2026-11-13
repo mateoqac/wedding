@@ -22,7 +22,7 @@ const template = getTemplate(invitation.templateId, invitation.templateVersion);
         {invitation.status !== "paid" && (
           <>
             {" · "}
-            <a href="/plantillas" class="underline underline-offset-4">cambiar</a>
+            <a href={`/plantillas?desde=${invitation.id}`} class="underline underline-offset-4">cambiar</a>
           </>
         )}
       </p>

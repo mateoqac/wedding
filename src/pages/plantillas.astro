@@ -1,39 +1,74 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteHeader from "@/layouts/SiteHeader.astro";
+import { getContainer } from "@/server/container";
+import { accessFor } from "@/server/http";
 import { listTemplates } from "@/templates/registry";
 
 const templates = listTemplates();
+
+// ?desde=<id>: the couple is changing the template of an existing draft, so the buttons
+// switch that draft (keeping every field) instead of creating a new, empty one.
+const fromId = Astro.url.searchParams.get("desde");
+const current = fromId
+  ? await getContainer().invitations.load(fromId, accessFor(Astro.cookies, fromId, Astro.locals.user?.id))
+  : null;
+const changing = current && current.status !== "paid" ? current : null;
 ---
 
 <BaseLayout title="Plantillas — Partes de matrimonio" description="Elige la plantilla de tu parte de matrimonio.">
   <SiteHeader user={Astro.locals.user} />
   <main class="mx-auto max-w-6xl px-4 py-12">
-    <h1 class="text-3xl font-semibold tracking-tight">Elige una plantilla</h1>
-    <p class="mt-2 text-muted-foreground">Podrás cambiar tipografía, color, emblema y marco en el editor.</p>
+    {changing ? (
+      <>
+        <h1 class="text-3xl font-semibold tracking-tight">Cambia la plantilla</h1>
+        <p class="mt-2 text-muted-foreground">
+          Todos los datos que ya completaste se mantienen; solo cambia el diseño.
+          <a href={`/editor/${changing.id}`} class="ml-1 underline underline-offset-4">Volver al editor</a>
+        </p>
+      </>
+    ) : (
+      <>
+        <h1 class="text-3xl font-semibold tracking-tight">Elige una plantilla</h1>
+        <p class="mt-2 text-muted-foreground">Podrás cambiar tipografía, color, emblema y marco en el editor.</p>
+      </>
+    )}
     <ul class="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-      {templates.map((template) => (
-        <li class="flex flex-col gap-4">
-          <img
-            src={`/api/templates/${template.meta.id}/thumbnail`}
-            alt={`Ejemplo de la plantilla ${template.meta.name}`}
-            width="1000"
-            height="714"
-            loading="lazy"
-            class="aspect-[1000/714] w-full border bg-muted object-cover"
-          />
-          <div class="flex flex-1 flex-col gap-3">
-            <h2 class="font-semibold">{template.meta.name}</h2>
-            <p class="flex-1 text-sm text-muted-foreground">{template.meta.description}</p>
-            <form method="post" action="/api/invitations">
-              <input type="hidden" name="templateId" value={template.meta.id} />
-              <button class="inline-flex h-10 w-full items-center justify-center rounded-md border bg-background px-4 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-2 focus-visible:outline-offset-2">
-                Usar esta plantilla
-              </button>
-            </form>
-          </div>
-        </li>
-      ))}
+      {templates.map((template) => {
+        const isCurrent = changing?.templateId === template.meta.id;
+        return (
+          <li class="flex flex-col gap-4">
+            <img
+              src={`/api/templates/${template.meta.id}/thumbnail`}
+              alt={`Ejemplo de la plantilla ${template.meta.name}`}
+              width="1000"
+              height="714"
+              loading="lazy"
+              class="aspect-[1000/714] w-full border bg-muted object-cover"
+            />
+            <div class="flex flex-1 flex-col gap-3">
+              <h2 class="font-semibold">{template.meta.name}</h2>
+              <p class="flex-1 text-sm text-muted-foreground">{template.meta.description}</p>
+              {isCurrent ? (
+                <a
+                  href={`/editor/${changing.id}`}
+                  aria-current="true"
+                  class="inline-flex h-10 w-full items-center justify-center rounded-md border border-foreground px-4 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2"
+                >
+                  Plantilla actual · seguir editando
+                </a>
+              ) : (
+                <form method="post" action={changing ? `/api/invitations/${changing.id}/template` : "/api/invitations"}>
+                  <input type="hidden" name="templateId" value={template.meta.id} />
+                  <button class="inline-flex h-10 w-full items-center justify-center rounded-md border bg-background px-4 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-2 focus-visible:outline-offset-2">
+                    Usar esta plantilla
+                  </button>
+                </form>
+              )}
+            </div>
+          </li>
+        );
+      })}
     </ul>
   </main>
 </BaseLayout>

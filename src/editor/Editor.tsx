@@ -188,16 +188,20 @@ export default function Editor({ invitationId, initialData, initialOptions, opti
           body: JSON.stringify({ data, options }),
         });
         const body = await response.json();
-        if (response.ok) {
-          setErrors({});
-          setServerMessage(null);
-          setSaveState("saved");
-        } else if (body.status === "invalid") {
+        const fieldErrors = () => {
           const next: typeof errors = {};
           for (const issue of body.issues as { path: string; message: string }[]) {
             next[fieldForIssue(issue.path)] ??= translate(issue.message);
           }
-          setErrors(next);
+          return next;
+        };
+        if (response.ok) {
+          // "incomplete": progress is saved; the issues only mark what is still missing.
+          setErrors(body.status === "incomplete" ? fieldErrors() : {});
+          setServerMessage(null);
+          setSaveState("saved");
+        } else if (body.status === "invalid") {
+          setErrors(fieldErrors());
           setServerMessage(null);
           setSaveState("idle");
         } else {

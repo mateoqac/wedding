@@ -81,3 +81,26 @@ test("the access link works once and expired links show a resend action", async 
   await expect(page.getByRole("alert")).toContainText("no es válido");
   await expect(page.getByRole("button", { name: "Enviar enlace" })).toBeVisible();
 });
+
+test("partial progress survives a reload and a template change", async ({ page }) => {
+  await page.goto("/plantillas");
+  await page.getByRole("button", { name: "Usar esta plantilla" }).first().click();
+  await expect(page).toHaveURL(/\/editor\//);
+  const editorUrl = page.url();
+  await page.locator("astro-island:not([ssr])").waitFor({ state: "attached" });
+  const name = page.getByLabel("Nombre completo de la novia o novio").first();
+  await name.fill("Ana Pérez Soto");
+  await expect(page.getByText("Cambios guardados")).toBeVisible({ timeout: 10_000 });
+
+  await page.reload();
+  await page.locator("astro-island:not([ssr])").waitFor({ state: "attached" });
+  await expect(name).toHaveValue("Ana Pérez Soto");
+
+  await page.getByRole("link", { name: "cambiar" }).click();
+  await expect(page.getByRole("heading", { name: "Cambia la plantilla" })).toBeVisible();
+  await page.getByRole("listitem").filter({ hasText: "Editorial" }).getByRole("button", { name: "Usar esta plantilla" }).click();
+  await expect(page).toHaveURL(editorUrl);
+  await expect(page.getByText("Plantilla Editorial")).toBeVisible();
+  await page.locator("astro-island:not([ssr])").waitFor({ state: "attached" });
+  await expect(name).toHaveValue("Ana Pérez Soto");
+});
