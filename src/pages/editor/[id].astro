@@ -20,7 +20,8 @@ const template = getTemplate(invitation.templateId, invitation.templateVersion);
       client:load
       invitationId={invitation.id}
       initialData={invitation.data}
-      initialOptions={invitation.options as never}
+      initialOptions={invitation.options as Record<string, string>}
+      optionSpecs={template.optionSpecs}
       paid={invitation.status === "paid"}
     />
   </main>

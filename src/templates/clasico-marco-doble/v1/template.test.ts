@@ -79,7 +79,7 @@ describe("clasico-marco-doble v1 template", () => {
   });
 
   it("inlines fonts as data URLs including latin-ext", () => {
-    const css = template.fontFaceCss("cormorant");
+    const css = template.fontFaceCss({ ...defaultOptions, font: "cormorant" });
     expect(css).toContain("@font-face");
     expect(css).toContain("data:font/woff2;base64,");
     expect(css).not.toMatch(/url\(\s*['"]?https?:/);

@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { Format } from "@/invitations/formats";
-import { OPTION_LABELS, type TemplateOptions } from "@/templates/clasico-marco-doble/v1/options";
 import { fieldForIssue, toFormState, toTemplateData, type FormState } from "./form-state";
 import { createPreviewScheduler, type PreviewResponse, type PreviewResult } from "./preview-scheduler";
 
@@ -16,10 +15,19 @@ const FORMAT_LABELS: Record<Format, string> = {
   story: "Historia 9:16",
 };
 
+type TemplateOptions = Record<string, string>;
+
+export interface OptionSpec {
+  name: string;
+  label: string;
+  choices: Record<string, string>;
+}
+
 interface Props {
   invitationId: string;
   initialData: unknown;
   initialOptions: TemplateOptions;
+  optionSpecs: OptionSpec[];
   paid: boolean;
 }
 
@@ -76,22 +84,20 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function OptionGroup<K extends keyof typeof OPTION_LABELS>({
-  name,
-  label,
+function OptionGroup({
+  spec,
   value,
   onChange,
 }: {
-  name: K;
-  label: string;
+  spec: OptionSpec;
   value: string;
   onChange: (value: string) => void;
 }) {
   return (
-    <div className="grid gap-1.5" role="radiogroup" aria-label={label}>
-      <span className="text-sm font-medium">{label}</span>
+    <div className="grid gap-1.5" role="radiogroup" aria-label={spec.label}>
+      <span className="text-sm font-medium">{spec.label}</span>
       <div className="flex flex-wrap gap-2">
-        {Object.entries(OPTION_LABELS[name]).map(([key, text]) => (
+        {Object.entries(spec.choices).map(([key, text]) => (
           <Button
             key={key}
             type="button"
@@ -110,7 +116,7 @@ function OptionGroup<K extends keyof typeof OPTION_LABELS>({
 }
 
 /** Editor island (design §5): form on the left, server-rendered watermarked preview on the right. */
-export default function Editor({ invitationId, initialData, initialOptions, paid }: Props) {
+export default function Editor({ invitationId, initialData, initialOptions, optionSpecs, paid }: Props) {
   const [form, setForm] = useState<FormState>(() => toFormState(initialData));
   const [options, setOptions] = useState<TemplateOptions>(initialOptions);
   const [format, setFormat] = useState<Format>("png");
@@ -252,10 +258,14 @@ export default function Editor({ invitationId, initialData, initialOptions, paid
           <Field label="Dirección para el sobre" name="envelopeAddress" value={form.envelopeAddress} onChange={set("envelopeAddress")} error={errors.envelopeAddress} />
         </Section>
         <Section title="Estilo">
-          <OptionGroup name="font" label="Tipografía" value={options.font} onChange={(v) => setOptions((o) => ({ ...o, font: v as TemplateOptions["font"] }))} />
-          <OptionGroup name="color" label="Color" value={options.color} onChange={(v) => setOptions((o) => ({ ...o, color: v as TemplateOptions["color"] }))} />
-          <OptionGroup name="emblem" label="Emblema" value={options.emblem} onChange={(v) => setOptions((o) => ({ ...o, emblem: v as TemplateOptions["emblem"] }))} />
-          <OptionGroup name="frame" label="Marco" value={options.frame} onChange={(v) => setOptions((o) => ({ ...o, frame: v as TemplateOptions["frame"] }))} />
+          {optionSpecs.map((spec) => (
+            <OptionGroup
+              key={spec.name}
+              spec={spec}
+              value={options[spec.name]}
+              onChange={(v) => setOptions((o) => ({ ...o, [spec.name]: v }))}
+            />
+          ))}
         </Section>
       </form>
 

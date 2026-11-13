@@ -6,7 +6,11 @@ import { fixtures as clasicoFixtures } from "./clasico-marco-doble/v1/fixtures";
 import { fontFaceCss as clasicoFontFaceCss } from "./clasico-marco-doble/v1/fonts";
 import { formats as clasicoFormats, type FormatGeometry } from "./clasico-marco-doble/v1/formats";
 import { meta as clasicoMeta } from "./clasico-marco-doble/v1/meta";
-import { defaultOptions as clasicoDefaults, optionsSchema as clasicoOptions } from "./clasico-marco-doble/v1/options";
+import {
+  OPTION_LABELS as clasicoLabels,
+  defaultOptions as clasicoDefaults,
+  optionsSchema as clasicoOptions,
+} from "./clasico-marco-doble/v1/options";
 import { invitationDataSchema as clasicoData } from "./clasico-marco-doble/v1/schema";
 import { Template as ClasicoTemplate } from "./clasico-marco-doble/v1/Template";
 
@@ -24,10 +28,13 @@ export interface TemplateModule {
   // biome-ignore lint: template-specific options shape
   optionsSchema: z.ZodType<any>;
   defaultOptions: Record<string, string>;
+  /** Choices shown in the editor's "Estilo" section, in order. */
+  optionSpecs: { name: string; label: string; choices: Record<string, string> }[];
   formats: Record<Format, FormatGeometry>;
   // biome-ignore lint: props validated by the template schemas
   Component: ComponentType<any>;
-  fontFaceCss(font: string): string;
+  /** @font-face rules for the fonts these options use. */
+  fontFaceCss(options: unknown): string;
   fixtures: Record<string, unknown>;
   facts(data: unknown): InvitationFacts;
   /** Link URLs that need QR codes in raster/print formats. */
@@ -43,7 +50,14 @@ const TEMPLATES: Record<string, Record<number, TemplateModule>> = {
       defaultOptions: clasicoDefaults,
       formats: clasicoFormats,
       Component: ClasicoTemplate,
-      fontFaceCss: (font) => clasicoFontFaceCss(font as never),
+      optionSpecs: [
+        { name: "font", label: "Tipografía", choices: clasicoLabels.font },
+        { name: "color", label: "Color", choices: clasicoLabels.color },
+        { name: "emblem", label: "Emblema", choices: clasicoLabels.emblem },
+        { name: "frame", label: "Marco", choices: clasicoLabels.frame },
+      ],
+      fontFaceCss: (options) =>
+        clasicoFontFaceCss(((options as { font?: string })?.font ?? clasicoDefaults.font) as never),
       fixtures: clasicoFixtures,
       facts: clasicoMarcoDobleV1Facts,
       links: (data) => {
