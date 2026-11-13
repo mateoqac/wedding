@@ -18,18 +18,20 @@ is neutral Spanish for Chile (tú, never vos); prices in CLP (`$9.990`).
 ## 1. Web app tokens
 
 Source: `src/styles/global.css` (shadcn "neutral" theme, `oklch` colors). The UI is
-intentionally neutral so the invitations carry the color.
+intentionally neutral so the invitations carry the color. The light theme is a *warm* neutral:
+every grey carries a touch of chroma (0.003–0.012) around hue 60–80, so the pages read as paper
+rather than as a system panel. Dark mode keeps the plain neutral values.
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--background` | `oklch(1 0 0)` | `oklch(0.145 0 0)` | Page background |
-| `--foreground` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` | Body text |
-| `--primary` / `--primary-foreground` | `oklch(0.205 0 0)` / `oklch(0.985 0 0)` | inverted | Primary buttons ("Usar esta plantilla", "Pagar") |
-| `--muted` / `--muted-foreground` | `oklch(0.97 0 0)` / `oklch(0.556 0 0)` | `oklch(0.269 0 0)` / `oklch(0.708 0 0)` | Secondary text, preview canvas background |
-| `--accent` | `oklch(0.97 0 0)` | `oklch(0.269 0 0)` | Hover surfaces |
+| `--background` | `oklch(0.993 0.003 80)` | `oklch(0.145 0 0)` | Page background |
+| `--foreground` | `oklch(0.17 0.008 60)` | `oklch(0.985 0 0)` | Body text |
+| `--primary` / `--primary-foreground` | `oklch(0.22 0.008 60)` / `oklch(0.985 0.003 80)` | inverted | Primary buttons ("Usar esta plantilla", "Pagar") |
+| `--muted` / `--muted-foreground` | `oklch(0.965 0.005 80)` / `oklch(0.55 0.012 60)` | `oklch(0.269 0 0)` / `oklch(0.708 0 0)` | Secondary text, preview canvas background |
+| `--accent` | `oklch(0.965 0.005 80)` | `oklch(0.269 0 0)` | Hover surfaces |
 | `--destructive` | `oklch(0.577 0.245 27.325)` | `oklch(0.704 0.191 22.216)` | Field errors, alerts |
-| `--border` | `oklch(0.922 0 0)` | `oklch(1 0 0 / 10%)` | Cards, inputs, dividers |
-| `--ring` | `oklch(0.708 0 0)` | — | Focus ring |
+| `--border` | `oklch(0.915 0.008 80)` | `oklch(1 0 0 / 10%)` | Cards, inputs, dividers |
+| `--ring` | `oklch(0.70 0.01 70)` | — | Focus ring |
 | `--radius` | `0.625rem` (sm ×0.6, md ×0.8, lg ×1, xl ×1.4) | — | Corners |
 
 Typography: the system sans stack (no custom web font in the app UI).

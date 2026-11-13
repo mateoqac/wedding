@@ -3,8 +3,13 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteHeader from "@/layouts/SiteHeader.astro";
 import { formatClp } from "@/lib/money";
 import { getContainer } from "@/server/container";
+import { listTemplates } from "@/templates/registry";
 
 const price = formatClp(getContainer().priceClp);
+const templates = listTemplates();
+// Four templates with distinct default palettes, so the landing shows the product's color range.
+const HERO_IDS = ["clasico-marco-doble", "botanica-neutra", "trazo-a-mano", "encaje-vintage"];
+const hero = HERO_IDS.flatMap((id) => templates.filter((t) => t.meta.id === id));
 const steps = [
   { title: "Elige una plantilla", text: "Diseños formales pensados para partes de matrimonio en Chile." },
   { title: "Completa los datos", text: "Ves la vista previa al instante, con marca de agua, sin crear cuenta." },
@@ -36,15 +41,23 @@ const steps = [
           </a>
         </div>
       </div>
-      <figure class="flex flex-col items-start gap-3">
-        <img
-          src="/api/templates/clasico-marco-doble/thumbnail"
-          alt="Vista previa de la plantilla Clásico marco doble con marca de agua"
-          width="1000"
-          height="714"
-          class="aspect-[1000/714] w-full max-w-[30rem] border bg-muted object-cover shadow-xs"
-        />
-        <figcaption class="text-sm text-muted-foreground">Plantilla Clásico marco doble · vista previa con marca de agua</figcaption>
+      <figure class="flex flex-col gap-3">
+        <ul class="grid grid-cols-2 gap-3">
+          {hero.map((template) => (
+            <li>
+              <img
+                src={`/api/templates/${template.meta.id}/thumbnail`}
+                alt={`Ejemplo de la plantilla ${template.meta.name}`}
+                width="1000"
+                height="714"
+                class="aspect-[1000/714] w-full border bg-muted object-cover"
+              />
+            </li>
+          ))}
+        </ul>
+        <figcaption class="text-sm text-muted-foreground">
+          {hero.map((t) => t.meta.name).join(", ")} · {templates.length} plantillas en total
+        </figcaption>
       </figure>
     </section>
     <section class="border-t" aria-labelledby="como-funciona">
