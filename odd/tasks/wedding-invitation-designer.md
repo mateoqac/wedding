@@ -30,13 +30,13 @@ Branch: feat/foundation. Delivery strategy: ask-on-risk → chain strategy: stac
 | T10 | S1, S5, S7 | Pages: landing, gallery, checkout | inline | done | landing, /plantillas, pagar, descargas, acceso, mis-invitaciones, fake checkout; covered by E2E; commit a094793 |
 | T11 | S9 | Rate limits + draft TTL cron | inline | done | RED→GREEN 6 integration tests (limits, fixed window, concurrent hits, access-link email+IP, 30-day cleanup, keeps drafts with payments); branch pr/10-rate-limits |
 | T12 | S4, S9, S10 | Visual regression (layout matrix + font specimens) + E2E happy path | inline | done | E2E 2/2 (pick→fill→pay fake→access link from another device→download 5 formats; invalid link); visual 19/19 in pinned image (15 layout, 3 font specimens, external URL blocked); final: 91 unit, 53 integration, astro check 0, build ok |
-| T13 | S2, S4 | Multi-template support: shared font registry, per-template option specs in the editor, gallery lists every template | inline | pending | |
-| T14 | S2, S4 | Template `editorial/v1` (design/plantillas-nuevas/01) | inline | pending | |
-| T15 | S2, S4 | Template `monograma/v1` (02) with initials from couple names | inline | pending | |
-| T16 | S2, S4 | Template `botanica-neutra/v1` (03) with original SVG sprigs | inline | pending | |
-| T17 | S2, S4 | Template `neutro-calido/v1` (04) | inline | pending | |
-| T18 | S2, S4 | Template `trazo-a-mano/v1` (05) with original SVG strokes | inline | pending | |
-| T19 | S2, S4 | Template `encaje-vintage/v1` (06) with SVG lace pattern | inline | pending | |
+| T13 | S2, S4 | Multi-template support: shared font registry, per-template option specs in the editor, gallery lists every template | inline | done | 9de0c64c — all-templates contract test RED (3 failing) → GREEN; editor options from template optionSpecs |
+| T14 | S2, S4 | Template `editorial/v1` (design/plantillas-nuevas/01) | inline | done | 5d71bc64 — contract tests + scripts/check-templates.ts (renderer overflow now checks .frame and .trim) |
+| T15 | S2, S4 | Template `monograma/v1` (02) with initials from couple names | inline | done | a28beb34 — initials seal with roman-numeral date (this commit also contains T16/T17 sources, see Log) |
+| T16 | S2, S4 | Template `botanica-neutra/v1` (03) with original SVG sprigs | inline | done | 38b55fda (sources in a28beb34) — decorations in a clipped layer so only text counts as overflow |
+| T17 | S2, S4 | Template `neutro-calido/v1` (04) | inline | done | a28beb34 — two-column layout |
+| T18 | S2, S4 | Template `trazo-a-mano/v1` (05) with original SVG strokes | inline | done | 720c57b4 |
+| T19 | S2, S4 | Template `encaje-vintage/v1` (06) with SVG lace pattern | inline | done | 57ec750f |
 
 Out of MVP: boleta electrónica and print shop validation (print values fixed: 21x15 cm, 3 mm bleed, RGB).
 
@@ -84,3 +84,4 @@ Out of MVP: boleta electrónica and print shop validation (print values fixed: 2
   - Editor: autosave race between overlapping saves, blob URL leak on unmount, duplicate field labels; download page refreshes without limit.
 - User: "navvegar en internet para buscar y crear mas plantillas" → web research (Paperless Post 2026 trends, e-invitationwedding 2026 editorial report, Chilean print shops: clásico, rústico/kraft, vintage/calado, floral acuarela). User chose "todas": design/plantillas-nuevas/ with 6 artboards (01-editorial, 02-monograma, 03-botanica-neutra, 04-neutro-calido, 05-trazo-a-mano, 06-encaje-vintage), each showing print 21x15 and story 9:16. No artboard chosen yet; implementation not started. Artboards use macOS system fonts as stand-ins; implementation would use OFL fonts (e.g. Bodoni Moda, Inter) bundled like D1.
 - User: "me gustaron todas!!! que lindo" → implement all six directions (T13–T19). New templates reuse the clasico v1 data schema and fixtures (same fields), each with its own options and fonts (OFL via @fontsource).
+- T13–T19 closed: 7 templates registered; contract tests 228 unit total, templates:check 105/105 without overflow, 90 new visual baselines (pinned image) and existing clasico baselines unchanged, 53 integration, E2E 2/2, build ok. Commit hygiene: a28beb34 (monograma) also captured botanica-neutra and neutro-calido sources because files were written in parallel with `git add -A`; history kept as is (content correct). Visual scripts call node_modules/.bin/playwright because `pnpm exec` re-ran install inside the container.

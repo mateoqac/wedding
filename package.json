@@ -22,8 +22,8 @@
     "workers:up": "docker compose --profile workers up -d --build",
     "test:e2e": "tsx tests/e2e/reset-database.ts && playwright test",
     "test:visual": "playwright test --config playwright.visual.config.ts",
-    "test:visual:docker": "docker run --rm -v \"$PWD\":/work -v wi-visual-node-modules:/work/node_modules -w /work mcr.microsoft.com/playwright:v1.65.0-noble bash -c 'npm i -g pnpm@11.22.0 >/dev/null && CI=true pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store >/dev/null && pnpm exec playwright test --config playwright.visual.config.ts'",
-    "test:visual:update": "docker run --rm -v \"$PWD\":/work -v wi-visual-node-modules:/work/node_modules -w /work mcr.microsoft.com/playwright:v1.65.0-noble bash -c 'npm i -g pnpm@11.22.0 >/dev/null && CI=true pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store >/dev/null && pnpm exec playwright test --config playwright.visual.config.ts --update-snapshots'",
+    "test:visual:docker": "docker run --rm -v \"$PWD\":/work -v wi-visual-node-modules:/work/node_modules -w /work mcr.microsoft.com/playwright:v1.65.0-noble bash -c 'npm i -g pnpm@11.22.0 >/dev/null && CI=true pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store >/dev/null && node_modules/.bin/playwright test --config playwright.visual.config.ts'",
+    "test:visual:update": "docker run --rm -v \"$PWD\":/work -v wi-visual-node-modules:/work/node_modules -w /work mcr.microsoft.com/playwright:v1.65.0-noble bash -c 'npm i -g pnpm@11.22.0 >/dev/null && CI=true pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store >/dev/null && node_modules/.bin/playwright test --config playwright.visual.config.ts --update-snapshots'",
     "templates:check": "tsx scripts/check-templates.ts"
   },
   "dependencies": {
