@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { RadioGroup } from "./RadioGroup";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -102,24 +103,12 @@ function OptionGroup({
   onChange: (value: string) => void;
 }) {
   return (
-    <div className="grid gap-1.5" role="radiogroup" aria-label={spec.label}>
-      <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{spec.label}</span>
-      <div className="flex flex-wrap gap-1.5">
-        {Object.entries(spec.choices).map(([key, text]) => (
-          <Button
-            key={key}
-            type="button"
-            size="sm"
-            role="radio"
-            aria-checked={value === key}
-            variant={value === key ? "default" : "outline"}
-            onClick={() => onChange(key)}
-          >
-            {text}
-          </Button>
-        ))}
-      </div>
-    </div>
+    <RadioGroup
+      label={spec.label}
+      options={Object.entries(spec.choices).map(([key, text]) => ({ value: key, label: text }))}
+      value={value}
+      onChange={onChange}
+    />
   );
 }
 
@@ -272,13 +261,14 @@ export default function Editor({ invitationId, initialData, initialOptions, opti
       </form>
 
       <section className="grid content-start gap-4 lg:sticky lg:top-6" aria-label="Vista previa">
-        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Formato">
-          {(Object.keys(FORMAT_LABELS) as Format[]).map((f) => (
-            <Button key={f} type="button" size="sm" role="tab" aria-selected={format === f} variant={format === f ? "default" : "outline"} onClick={() => setFormat(f)}>
-              {FORMAT_LABELS[f]}
-            </Button>
-          ))}
-        </div>
+        {/* A choice of what the preview shows, not tabs with panels: a radio group. */}
+        <RadioGroup
+          label="Formato"
+          showLabel={false}
+          options={(Object.keys(FORMAT_LABELS) as Format[]).map((f) => ({ value: f, label: FORMAT_LABELS[f] }))}
+          value={format}
+          onChange={(f) => setFormat(f as Format)}
+        />
         {/* Style options live next to the preview: they change what you see, the form changes the content. */}
         <section className="flex flex-wrap gap-x-8 gap-y-4 rounded-lg border px-4 py-3.5" aria-label="Estilo">
           {optionSpecs.map((spec) => (

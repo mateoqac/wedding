@@ -104,3 +104,34 @@ test("partial progress survives a reload and a template change", async ({ page }
   await page.locator("astro-island:not([ssr])").waitFor({ state: "attached" });
   await expect(name).toHaveValue("Ana Pérez Soto");
 });
+
+test("style options and formats are one Tab stop each and move with the arrow keys", async ({ page }) => {
+  await page.goto("/plantillas");
+  await page.getByRole("button", { name: "Usar esta plantilla" }).first().click();
+  await expect(page).toHaveURL(/\/editor\//);
+  await page.locator("astro-island:not([ssr])").waitFor({ state: "attached" });
+
+  for (const groupName of ["Formato", "Color"]) {
+    const group = page.getByRole("radiogroup", { name: groupName });
+    const radios = group.getByRole("radio");
+    // Roving tabindex: only the checked option is reachable with Tab.
+    await expect(group.locator('[role="radio"][tabindex="0"]')).toHaveCount(1);
+    const count = await radios.count();
+    await expect(group.locator('[role="radio"][tabindex="-1"]')).toHaveCount(count - 1);
+
+    const checked = group.locator('[role="radio"][aria-checked="true"]');
+    await checked.focus();
+    const before = await checked.textContent();
+    await page.keyboard.press("ArrowRight");
+    const after = group.locator('[role="radio"][aria-checked="true"]');
+    await expect(after).not.toHaveText(before ?? "");
+    await expect(after).toBeFocused();
+    await page.keyboard.press("ArrowLeft");
+    await expect(group.locator('[role="radio"][aria-checked="true"]')).toHaveText(before ?? "");
+    await page.keyboard.press("End");
+    await expect(radios.last()).toHaveAttribute("aria-checked", "true");
+    await page.keyboard.press("Home");
+    await expect(radios.first()).toHaveAttribute("aria-checked", "true");
+  }
+  await expect(page.getByRole("tab")).toHaveCount(0);
+});
