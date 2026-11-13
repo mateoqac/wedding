@@ -69,6 +69,13 @@ describe("renderer", () => {
     expect(imageSize(story.body)).toEqual({ width: 1080, height: 1920 });
   });
 
+  it("exports tagged PDFs with a title and Spanish language for screen readers", async () => {
+    const pdf = (await renderer.renderExport(input("digital-pdf"))).body.toString("latin1");
+    expect(pdf).toContain("/StructTreeRoot");
+    expect(pdf).toMatch(/\/Lang\s*\(es/);
+    expect(pdf).toContain("/Title");
+  });
+
   it("blocks every external request from the page", async () => {
     const result = await renderer.renderHtml(
       '<img src="https://example.com/x.png"><link rel="stylesheet" href="http://example.com/a.css">',

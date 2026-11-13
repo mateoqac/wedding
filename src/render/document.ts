@@ -14,6 +14,9 @@ export interface RenderInput {
 
 export class InvalidRenderInputError extends Error {}
 
+const escapeHtml = (text: string) =>
+  text.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string);
+
 const CSS_PX_PER_MM = 96 / 25.4;
 
 export async function qrSvg(url: string): Promise<string> {
@@ -43,8 +46,10 @@ export async function buildDocument(input: RenderInput, { watermark }: { waterma
   );
   const factor = geometry.unit === "mm" ? CSS_PX_PER_MM : 1;
   const size = { width: Math.round(geometry.width * factor), height: Math.round(geometry.height * factor) };
+  const facts = template.facts(data.data);
+  const title = escapeHtml(`Parte de matrimonio de ${facts.coupleNames.join(" y ")}`);
   const marks = watermark ? `<div class="wm">${"<span>VISTA PREVIA</span>".repeat(60)}</div>` : "";
-  const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><style>${template.fontFaceCss(options.data)}
+  const html = `<!doctype html><html lang="es-CL"><head><meta charset="utf-8"><title>${title}</title><style>${template.fontFaceCss(options.data)}
 @page{size:${geometry.width}${geometry.unit} ${geometry.height}${geometry.unit};margin:0}
 html,body{margin:0}${watermark ? WATERMARK_CSS : ""}</style></head><body>${markup}${marks}</body></html>`;
   return { html, size, geometry };

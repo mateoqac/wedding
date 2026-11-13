@@ -137,6 +137,8 @@ export function createRenderer({
             height: `${geometry.height}mm`,
             printBackground: true,
             preferCSSPageSize: true,
+            // Tagged PDF: reading order and structure for screen readers (accessibility).
+            tagged: true,
           });
           return { body, overflow, contentType: "application/pdf" as const, extension: "pdf" as const };
         }

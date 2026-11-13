@@ -40,7 +40,11 @@ test("couple designs, pays and downloads every format", async ({ page, browser }
   await page.getByRole("button", { name: /^Pagar/ }).click();
   await expect(page.getByRole("heading", { name: "Pasarela de prueba" })).toBeVisible();
   await page.getByRole("button", { name: "Aprobar pago" }).click();
-  await expect(page.getByRole("status")).toContainText("Pago confirmado");
+  await expect(page.getByRole("status").filter({ hasText: "Pago confirmado" })).toBeVisible();
+
+  const shareText = page.getByRole("textbox", { name: "Texto para compartir" });
+  await expect(shareText).toHaveValue(/^Parte de matrimonio de Ana Pérez Soto y Luis Muñoz Rojas\./);
+  await expect(shareText).toHaveJSProperty("readOnly", true);
 
   const email = await lastEmail();
   expect(email.to).toBe("ana@example.cl");
