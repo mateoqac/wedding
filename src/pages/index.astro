@@ -19,26 +19,49 @@ const steps = [
 >
   <SiteHeader user={Astro.locals.user} />
   <main>
-    <section class="mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 py-20 text-center">
-      <h1 class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Tu parte de matrimonio, listo para imprenta y WhatsApp</h1>
-      <p class="max-w-xl text-lg text-muted-foreground text-pretty">
-        Elige una plantilla clásica, completa los datos y descárgalo en todos los formatos con un solo pago de {price}.
-      </p>
-      <a href="/plantillas" class="inline-flex h-11 items-center rounded-md bg-primary px-6 font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2">
-        Ver plantillas
-      </a>
+    <section class="mx-auto grid max-w-6xl items-start gap-16 px-4 pt-24 pb-22 lg:grid-cols-2">
+      <div class="flex flex-col gap-7 lg:pt-6">
+        <h1 class="max-w-xl text-4xl font-semibold tracking-tight text-balance sm:text-[2.75rem] sm:leading-[1.12]">
+          Tu parte de matrimonio, listo para imprenta y WhatsApp
+        </h1>
+        <p class="max-w-lg text-lg text-muted-foreground text-pretty">
+          Elige una plantilla clásica, completa los datos y descárgalo en todos los formatos con un solo pago de {price}.
+        </p>
+        <div>
+          <a
+            href="/plantillas"
+            class="inline-flex h-11 items-center rounded-md bg-primary px-6 font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            Ver plantillas
+          </a>
+        </div>
+      </div>
+      <figure class="flex flex-col items-start gap-3">
+        <img
+          src="/api/templates/clasico-marco-doble/thumbnail"
+          alt="Vista previa de la plantilla Clásico marco doble con marca de agua"
+          width="1000"
+          height="714"
+          class="aspect-[1000/714] w-full max-w-[30rem] border bg-muted object-cover shadow-xs"
+        />
+        <figcaption class="text-sm text-muted-foreground">Plantilla Clásico marco doble · vista previa con marca de agua</figcaption>
+      </figure>
     </section>
-    <section class="mx-auto max-w-5xl px-4 pb-24" aria-labelledby="como-funciona">
-      <h2 id="como-funciona" class="mb-8 text-center text-2xl font-semibold">Cómo funciona</h2>
-      <ol class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {steps.map((step, i) => (
-          <li class="rounded-lg border p-5">
-            <span class="text-sm font-semibold text-muted-foreground">Paso {i + 1}</span>
-            <h3 class="mt-1 font-semibold">{step.title}</h3>
-            <p class="mt-2 text-sm text-muted-foreground">{step.text}</p>
-          </li>
-        ))}
-      </ol>
+    <section class="border-t" aria-labelledby="como-funciona">
+      <div class="mx-auto grid max-w-6xl gap-12 px-4 pt-14 pb-20 lg:grid-cols-3">
+        <h2 id="como-funciona" class="text-2xl font-semibold tracking-tight">Cómo funciona</h2>
+        <ol class="divide-y border-y lg:col-span-2">
+          {steps.map((step, i) => (
+            <li class="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-4 py-5">
+              <span class="text-sm text-muted-foreground tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+              <div class="flex flex-col gap-1">
+                <h3 class="font-semibold">{step.title}</h3>
+                <p class="max-w-xl text-[15px] text-muted-foreground">{step.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
     </section>
   </main>
 </BaseLayout>

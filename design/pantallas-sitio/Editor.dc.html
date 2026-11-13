@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<title>Editor — Clásico marco doble</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000000}
+input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #B5B5B5;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: #252525; background: #FFFFFF; min-height: 100%; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased">
+
+  <header style="border-bottom: 1px solid #E5E5E5">
+    <nav aria-label="Principal" style="max-width: 1152px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
+      <a href="Main.dc.html" style="font-weight: 600; text-decoration: none; font-size: 16px">Partes de matrimonio</a>
+      <div style="display: flex; align-items: center; gap: 16px; font-size: 14px">
+        <a href="Plantillas.dc.html" style="text-decoration: none">Plantillas</a>
+        <a href="#acceso" style="text-decoration: none">Acceder</a>
+      </div>
+    </nav>
+  </header>
+
+  <main style="flex: 1; max-width: 1280px; margin: 0 auto; padding: 32px 16px 64px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+    <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px">
+      <h1 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em">Completa tu invitación</h1>
+      <p style="margin: 0; font-size: 14px; color: #767676">Plantilla Clásico marco doble · <a href="Plantillas.dc.html" style="color: #767676">cambiar</a></p>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+
+      <form aria-label="Datos de la invitación" style="flex: 1 1 400px; max-width: 416px; display: flex; flex-direction: column; gap: 24px">
+
+        <fieldset style="margin: 0; padding: 16px; border: 1px solid #E5E5E5; border-radius: 10px; display: flex; flex-direction: column; gap: 16px">
+          <legend style="padding: 0 4px; font-size: 14px; font-weight: 600">Novios</legend>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-partnerOne" style="font-size: 14px; font-weight: 500">Nombre completo de la novia o novio</label>
+            <input id="f-partnerOne" name="partnerOne" type="text" value="Catalina Fuentes Díaz" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-partnerTwo" style="font-size: 14px; font-weight: 500">Nombre completo de la novia o novio</label>
+            <input id="f-partnerTwo" name="partnerTwo" type="text" value="Tomás Álvarez Morales" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+        </fieldset>
+
+        <fieldset style="margin: 0; padding: 16px; border: 1px solid #E5E5E5; border-radius: 10px; display: flex; flex-direction: column; gap: 16px">
+          <legend style="padding: 0 4px; font-size: 14px; font-weight: 600">Padres</legend>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-parentsOne0" style="font-size: 14px; font-weight: 500">Padres (primera familia) — nombre 1</label>
+            <input id="f-parentsOne0" name="parentsOne0" type="text" value="Patricia Fuentes Ramírez" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-parentsOne1" style="font-size: 14px; font-weight: 500">Padres (primera familia) — nombre 2 (opcional)</label>
+            <input id="f-parentsOne1" name="parentsOne1" type="text" value="Rodrigo Álvarez Soto" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-parentsTwo0" style="font-size: 14px; font-weight: 500">Padres (segunda familia) — nombre 1</label>
+            <input id="f-parentsTwo0" name="parentsTwo0" type="text" value="Carolina Díaz Pérez" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-parentsTwo1" style="font-size: 14px; font-weight: 500">Padres (segunda familia) — nombre 2 (opcional)</label>
+            <input id="f-parentsTwo1" name="parentsTwo1" type="text" value="Andrés Morales Vega" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+        </fieldset>
+
+        <fieldset style="margin: 0; padding: 16px; border: 1px solid #E5E5E5; border-radius: 10px; display: flex; flex-direction: column; gap: 16px">
+          <legend style="padding: 0 4px; font-size: 14px; font-weight: 600">Ceremonia</legend>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-ceremonyDescription" style="font-size: 14px; font-weight: 500">Descripción</label>
+            <textarea id="f-ceremonyDescription" name="ceremonyDescription" rows="3" style="padding: 8px 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; line-height: 1.5; color: #252525; background: #FFFFFF; resize: vertical">Ceremonia religiosa que se efectuará en la Parroquia San Francisco de Sales</textarea>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-ceremonyAddress" style="font-size: 14px; font-weight: 500">Dirección</label>
+            <input id="f-ceremonyAddress" name="ceremonyAddress" type="text" value="Av. Los Leones 1800, Providencia" aria-invalid="true" aria-describedby="f-ceremonyAddress-error" style="height: 40px; padding: 0 12px; border: 1px solid #E7000B; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+            <p id="f-ceremonyAddress-error" style="margin: 0; font-size: 14px; color: #C4000A">Este campo es obligatorio o tiene un formato inválido.</p>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <label for="f-ceremonyDate" style="font-size: 14px; font-weight: 500">Fecha</label>
+              <input id="f-ceremonyDate" name="ceremonyDate" type="date" value="2026-10-17" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <label for="f-ceremonyTime" style="font-size: 14px; font-weight: 500">Hora</label>
+              <input id="f-ceremonyTime" name="ceremonyTime" type="time" value="18:00" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset style="margin: 0; padding: 16px; border: 1px solid #E5E5E5; border-radius: 10px; display: flex; flex-direction: column; gap: 16px">
+          <legend style="padding: 0 4px; font-size: 14px; font-weight: 600">Recepción (opcional)</legend>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-partyVenue" style="font-size: 14px; font-weight: 500">Lugar</label>
+            <input id="f-partyVenue" name="partyVenue" type="text" value="Casona Los Aromos" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-partyAddress" style="font-size: 14px; font-weight: 500">Dirección</label>
+            <input id="f-partyAddress" name="partyAddress" type="text" value="Camino El Alba 12.400, Las Condes" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px; max-width: 50%">
+            <label for="f-partyTime" style="font-size: 14px; font-weight: 500">Hora</label>
+            <input id="f-partyTime" name="partyTime" type="time" value="20:30" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+        </fieldset>
+
+        <fieldset style="margin: 0; padding: 16px; border: 1px solid #E5E5E5; border-radius: 10px; display: flex; flex-direction: column; gap: 16px">
+          <legend style="padding: 0 4px; font-size: 14px; font-weight: 600">Confirmación (S.R.C.)</legend>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-phone0" style="font-size: 14px; font-weight: 500">Teléfono 1</label>
+            <input id="f-phone0" name="phone0" type="tel" value="+56 9 1234 5678" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-phone1" style="font-size: 14px; font-weight: 500">Teléfono 2 (opcional)</label>
+            <input id="f-phone1" name="phone1" type="tel" value="" placeholder="+56 9 1234 5678" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="f-rsvpEmail" style="font-size: 14px; font-weight: 500">Email (opcional)</label>
+            <input id="f-rsvpEmail" name="rsvpEmail" type="email" value="" style="height: 40px; padding: 0 12px; border: 1px solid #E5E5E5; border-radius: 8px; font: inherit; font-size: 14px; color: #252525; background: #FFFFFF">
+          </div>
+        </fieldset>
+
+        <fieldset style="margin: 0; padding: 16px; border: 1px solid #E5E5E5; border-radius: 10px; display: flex; flex-direction: column; gap: 16px">
+          <legend style="padding: 0 4px; font-size: 14px; font-weight: 600">Estilo</legend>
+
+          <div role="radiogroup" aria-label="Tipografía" style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 14px; font-weight: 500">Tipografía</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{fonts}}" as="opt" hint-placeholder-count="3">
+                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div role="radiogroup" aria-label="Color" style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 14px; font-weight: 500">Color</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{colors}}" as="opt" hint-placeholder-count="3">
+                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div role="radiogroup" aria-label="Emblema" style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 14px; font-weight: 500">Emblema</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{emblems}}" as="opt" hint-placeholder-count="2">
+                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div role="radiogroup" aria-label="Marco" style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 14px; font-weight: 500">Marco</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{frames}}" as="opt" hint-placeholder-count="2">
+                <button type="button" role="radio" aria-checked="{{opt.checked}}" onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+      <section aria-label="Vista previa" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+        <div role="tablist" aria-label="Formato" style="display: flex; flex-wrap: wrap; gap: 8px">
+          <sc-for list="{{formats}}" as="f" hint-placeholder-count="5">
+            <button type="button" role="tab" aria-selected="{{f.selected}}" onClick="{{f.pick}}" style="{{f.style}}">{{f.label}}</button>
+          </sc-for>
+        </div>
+
+        <div style="position: relative; display: flex; align-items: center; justify-content: center; min-height: 256px; padding: 32px; border: 1px solid #E5E5E5; border-radius: 10px; background: #FAFAFA">
+          <sc-if value="{{landscape}}" hint-placeholder-val="{{true}}">
+            <div style="position: relative; width: 100%; max-width: 640px; aspect-ratio: 1000 / 714; background: #FFFCF7; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1); box-sizing: border-box">
+              <div style="{{outerFrame}}"></div>
+              <div style="{{innerFrame}}"></div>
+              <div style="{{bodyStyle}}">
+                <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; width: 100%; align-items: center; font-size: 14px; line-height: 1.35">
+                  <span>Patricia Fuentes Ramírez<br>Rodrigo Álvarez Soto</span>
+                  <sc-if value="{{showEmblem}}" hint-placeholder-val="{{true}}">
+                    <svg width="34" height="34" viewBox="0 0 30 30" aria-hidden="true" fill="none" stroke="{{ink}}" stroke-width="1"><circle cx="11" cy="16" r="7"/><circle cx="19" cy="14" r="7"/></svg>
+                  </sc-if>
+                  <sc-if value="{{hideEmblem}}" hint-placeholder-val="{{false}}">
+                    <span style="width: 34px"></span>
+                  </sc-if>
+                  <span>Carolina Díaz Pérez<br>Andrés Morales Vega</span>
+                </div>
+                <p style="margin: 6px 0 0; font-size: 14px; font-style: italic">participan a usted el matrimonio de sus hijos</p>
+                <p style="{{namesStyle}}">Catalina <span style="font-style: italic; font-weight: 400">y</span> Tomás</p>
+                <p style="margin: 0; font-size: 14px; line-height: 1.45">Ceremonia religiosa que se efectuará en la Parroquia San Francisco de Sales<br>el sábado 17 de octubre de 2026 a las 18:00 horas</p>
+                <p style="margin: 0; font-size: 13px; line-height: 1.45">Recepción en Casona Los Aromos, Camino El Alba 12.400, Las Condes · 20:30 horas</p>
+                <p style="margin: 4px 0 0; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase">S.R.C. +56 9 1234 5678</p>
+              </div>
+              <div aria-hidden="true" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none">
+                <span style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 48px; font-weight: 600; letter-spacing: 0.2em; color: rgba(37,37,37,0.09); transform: rotate(-22deg); white-space: nowrap">VISTA PREVIA</span>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{story}}" hint-placeholder-val="{{false}}">
+            <div style="position: relative; width: 300px; aspect-ratio: 9 / 16; background: #FFFCF7; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1); box-sizing: border-box">
+              <div style="{{outerFrame}}"></div>
+              <div style="{{innerFrame}}"></div>
+              <div style="{{storyBodyStyle}}">
+                <sc-if value="{{showEmblem}}" hint-placeholder-val="{{true}}">
+                  <svg width="40" height="40" viewBox="0 0 30 30" aria-hidden="true" fill="none" stroke="{{ink}}" stroke-width="1"><circle cx="11" cy="16" r="7"/><circle cx="19" cy="14" r="7"/></svg>
+                </sc-if>
+                <p style="{{storyNamesStyle}}">Catalina<br><span style="font-style: italic; font-weight: 400; font-size: 0.6em">y</span><br>Tomás</p>
+                <p style="margin: 0; font-size: 14px; line-height: 1.5">Sábado 17 de octubre de 2026<br>18:00 horas</p>
+                <p style="margin: 0; font-size: 13px; line-height: 1.5">Parroquia San Francisco de Sales<br>Av. Los Leones 1800, Providencia</p>
+                <p style="margin: 0; font-size: 13px; line-height: 1.5">Recepción · Casona Los Aromos<br>20:30 horas</p>
+                <div aria-hidden="true" style="width: 44px; height: 44px; margin-top: 8px; border: 1px solid {{ink}}; display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 5px; box-sizing: border-box"><span style="background: {{ink}}"></span><span></span><span style="background: {{ink}}"></span><span></span><span style="background: {{ink}}"></span><span></span><span style="background: {{ink}}"></span><span></span><span style="background: {{ink}}"></span></div>
+                <p style="margin: 0; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase">Cómo llegar</p>
+              </div>
+              <div aria-hidden="true" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none">
+                <span style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 32px; font-weight: 600; letter-spacing: 0.2em; color: rgba(37,37,37,0.09); transform: rotate(-60deg); white-space: nowrap">VISTA PREVIA</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <p style="margin: 0; font-size: 13px; color: #767676">{{formatNote}}</p>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 8px; border-top: 1px solid #E5E5E5">
+          <span aria-live="polite" style="font-size: 14px; color: #767676">Cambios guardados</span>
+          <a href="Pagar.dc.html" style="display: inline-flex; align-items: center; height: 40px; padding: 0 20px; border-radius: 8px; background: #343434; color: #FAFAFA; font-weight: 500; font-size: 14px; text-decoration: none">Continuar al pago</a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1560}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { format: 'png', font: 'cormorant', color: 'oro', emblem: 'anillos', frame: 'doble' };
+  }
+  renderVals() {
+    const s = this.state;
+    const chip = (on) => on
+      ? 'height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #343434; background: #343434; color: #FAFAFA; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer'
+      : 'height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #E5E5E5; background: #FFFFFF; color: #252525; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer';
+    const group = (key, items) => items.map((it) => ({
+      label: it.label,
+      checked: s[key] === it.id,
+      style: chip(s[key] === it.id),
+      pick: () => this.setState({ [key]: it.id }),
+    }));
+    const FORMATS = [
+      { id: 'print-pdf', label: 'Imprenta', note: 'PDF para imprenta: 21 × 15 cm con 3 mm de sangrado y marcas de corte. Los enlaces van como código QR.' },
+      { id: 'digital-pdf', label: 'PDF digital', note: 'PDF digital: 21 × 15 cm con enlaces clicables, para enviar por email o WhatsApp.' },
+      { id: 'png', label: 'Imagen PNG', note: 'Imagen PNG: 2480 × 1772 px (300 dpi), enlaces como código QR.' },
+      { id: 'jpg', label: 'Imagen JPG', note: 'Imagen JPG: 2480 × 1772 px, más liviana.' },
+      { id: 'story', label: 'Historia 9:16', note: 'Historia 9:16: 1080 × 1920 px para Instagram o estados de WhatsApp. Composición vertical propia.' },
+    ];
+    const INK = { oro: '#9a7b3f', 'azul-noche': '#1f2f4f', 'verde-salvia': '#5d7360' };
+    const FONT = {
+      cormorant: "'Cormorant Garamond', Georgia, serif",
+      playfair: "'Playfair Display', Georgia, serif",
+      'great-vibes': "'Great Vibes', cursive",
+    };
+    const ink = INK[s.color];
+    const family = FONT[s.font];
+    const namesFamily = s.font === 'great-vibes' ? FONT['great-vibes'] : family;
+    const textFamily = s.font === 'great-vibes' ? FONT.cormorant : family;
+    const current = FORMATS.find((f) => f.id === s.format);
+    const double = s.frame === 'doble';
+    return {
+      fonts: group('font', [
+        { id: 'cormorant', label: 'Cormorant Garamond' },
+        { id: 'playfair', label: 'Playfair Display' },
+        { id: 'great-vibes', label: 'Great Vibes' },
+      ]),
+      colors: group('color', [
+        { id: 'oro', label: 'Oro' },
+        { id: 'azul-noche', label: 'Azul noche' },
+        { id: 'verde-salvia', label: 'Verde salvia' },
+      ]),
+      emblems: group('emblem', [
+        { id: 'anillos', label: 'Anillos' },
+        { id: 'ninguno', label: 'Sin emblema' },
+      ]),
+      frames: group('frame', [
+        { id: 'doble', label: 'Marco doble' },
+        { id: 'simple', label: 'Marco simple' },
+      ]),
+      formats: FORMATS.map((f) => ({
+        label: f.label,
+        selected: s.format === f.id,
+        style: chip(s.format === f.id),
+        pick: () => this.setState({ format: f.id }),
+      })),
+      formatNote: current.note,
+      landscape: s.format !== 'story',
+      story: s.format === 'story',
+      ink,
+      showEmblem: s.emblem === 'anillos',
+      hideEmblem: s.emblem !== 'anillos',
+      outerFrame: 'position: absolute; inset: 12px; border: 1px solid ' + ink + '; pointer-events: none',
+      innerFrame: double ? 'position: absolute; inset: 18px; border: 1px solid ' + ink + '; pointer-events: none' : 'display: none',
+      bodyStyle: 'position: absolute; inset: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 16px 32px; color: ' + ink + '; font-family: ' + textFamily,
+      namesStyle: 'margin: 0; font-size: ' + (s.font === 'great-vibes' ? '44px' : '36px') + '; line-height: 1.1; font-weight: 500; font-family: ' + namesFamily,
+      storyBodyStyle: 'position: absolute; inset: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 24px; color: ' + ink + '; font-family: ' + textFamily,
+      storyNamesStyle: 'margin: 0; font-size: ' + (s.font === 'great-vibes' ? '40px' : '32px') + '; line-height: 1.15; font-weight: 500; font-family: ' + namesFamily,
+    };
+  }
+}
+</script>
+</body>
+</html>

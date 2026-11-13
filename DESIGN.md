@@ -49,6 +49,9 @@ Components (`src/components/ui/`, shadcn): `button`, `card`, `input`, `label`, `
 | Access | `src/pages/acceso.astro`, `src/pages/mis-invitaciones.astro` | Email access link, list of paid invitations |
 | Header | `src/layouts/SiteHeader.astro` | |
 
+Mockups of every page, built with these tokens: `design/pantallas-sitio/` (Claude Design canvas files;
+`design.json` links the live canvas and maps each artboard to its page).
+
 UX rules already in place: the preview is **always rendered by the server** (no client-side
 DOM preview); WCAG AA contrast; visible focus; every form error is inline and in Spanish;
 landing, gallery and checkout must stay JavaScript-free.

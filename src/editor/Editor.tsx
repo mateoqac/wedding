@@ -15,6 +15,14 @@ const FORMAT_LABELS: Record<Format, string> = {
   story: "Historia 9:16",
 };
 
+const FORMAT_NOTES: Record<Format, string> = {
+  "print-pdf": "PDF para imprenta: 21 × 15 cm con 3 mm de sangrado y marcas de corte. Los enlaces van como código QR.",
+  "digital-pdf": "PDF digital: 21 × 15 cm con enlaces clicables, para enviar por email o WhatsApp.",
+  png: "Imagen PNG: 2480 × 1772 px (300 dpi), enlaces como código QR.",
+  jpg: "Imagen JPG: 2480 × 1772 px, más liviana.",
+  story: "Historia 9:16: 1080 × 1920 px para Instagram o estados de WhatsApp. Composición vertical propia.",
+};
+
 type TemplateOptions = Record<string, string>;
 
 export interface OptionSpec {
@@ -301,7 +309,8 @@ export default function Editor({ invitationId, initialData, initialOptions, opti
             El texto no cabe en el diseño. Acorta algún campo largo (descripción, direcciones o nombres).
           </p>
         ) : null}
-        <div className="flex items-center justify-between gap-4">
+        <p className="text-sm text-muted-foreground">{FORMAT_NOTES[format]}</p>
+        <div className="flex items-center justify-between gap-4 border-t pt-4">
           <span className="text-sm text-muted-foreground" aria-live="polite">
             {{ idle: "", saving: "Guardando…", saved: "Cambios guardados", error: "" }[saveState]}
           </span>
