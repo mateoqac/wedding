@@ -21,12 +21,19 @@ export type Invitation = typeof invitations.$inferSelect;
 
 export type SaveResult =
   | { status: "saved" }
+  /** Draft saved as typed; `issues` lists what is still missing before preview and payment. */
+  | { status: "saved_incomplete"; issues: { path: string; message: string }[] }
   | { status: "not_found" }
   | { status: "invalid"; issues: { path: string; message: string }[] }
   | { status: "names_locked" }
   | { status: "edit_window_closed" };
 
 const emailSchema = z.email();
+
+/** Incomplete drafts are stored as typed, within a size cap so storage cannot be abused. */
+const MAX_DRAFT_BYTES = 32 * 1024;
+const isStorableDraft = (data: unknown) =>
+  !!data && typeof data === "object" && !Array.isArray(data) && JSON.stringify(data).length <= MAX_DRAFT_BYTES;
 
 export function createInvitationService({
   db,
@@ -89,12 +96,20 @@ export function createInvitationService({
       const template = getTemplate(row.templateId, row.templateVersion);
       const data = template.dataSchema.safeParse(input.data);
       const options = template.optionsSchema.safeParse(input.options);
-      if (!data.success || !options.success) {
-        const issues = [...(data.error?.issues ?? []), ...(options.error?.issues ?? [])].map((issue) => ({
-          path: issue.path.join("."),
-          message: issue.message,
-        }));
-        return { status: "invalid", issues };
+      const toIssues = (issues: z.core.$ZodIssue[]) =>
+        issues.map((issue) => ({ path: issue.path.join("."), message: issue.message }));
+      if (!options.success) return { status: "invalid", issues: toIssues(options.error.issues) };
+      if (!data.success) {
+        // Drafts keep partial progress (reloads and template changes must not lose it);
+        // paid invitations only accept complete data.
+        if (row.status === "paid" || !isStorableDraft(input.data)) {
+          return { status: "invalid", issues: toIssues(data.error.issues) };
+        }
+        await db
+          .update(invitations)
+          .set({ data: input.data, options: options.data, lastActivityAt: now(), updatedAt: now() })
+          .where(eq(invitations.id, row.id));
+        return { status: "saved_incomplete", issues: toIssues(data.error.issues) };
       }
 
       if (row.status === "paid") {
@@ -113,6 +128,29 @@ export function createInvitationService({
         .set({ data: data.data, options: options.data, lastActivityAt: now(), updatedAt: now() })
         .where(eq(invitations.id, row.id));
       return { status: "saved" };
+    },
+
+    /**
+     * Switches a draft to another template keeping every field (all templates share the
+     * data fields); style options reset to the new template's defaults.
+     */
+    async changeTemplate(invitationId: string, access: Access, templateId: string) {
+      const row = await load(invitationId, access);
+      if (!row) return { status: "not_found" as const };
+      if (row.status === "paid") return { status: "already_paid" as const };
+      const template = listTemplates().find((t) => t.meta.id === templateId);
+      if (!template) return { status: "unknown_template" as const };
+      await db
+        .update(invitations)
+        .set({
+          templateId,
+          templateVersion: template.meta.version,
+          options: template.defaultOptions,
+          lastActivityAt: now(),
+          updatedAt: now(),
+        })
+        .where(eq(invitations.id, row.id));
+      return { status: "changed" as const };
     },
 
     /** Email is entered in the checkout form; no login before paying (design §3). */

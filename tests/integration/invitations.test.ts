@@ -89,8 +89,9 @@ describe("drafts", () => {
     const draft = await service.createDraft({ templateId: "clasico-marco-doble", ip: "1.1.1.1" });
     if (draft.status !== "created") return;
     const access = { editToken: draft.editToken };
+    // Incomplete drafts are kept (with the list of missing fields), never discarded.
     const bad = await service.saveDraft(draft.invitationId, access, { data: { couple: {} }, options: defaultOptions });
-    expect(bad.status).toBe("invalid");
+    expect(bad.status).toBe("saved_incomplete");
     clock = new Date(clock.getTime() + 1000);
     expect(await service.saveDraft(draft.invitationId, access, { data: fixtures.typical, options: defaultOptions })).toEqual({ status: "saved" });
     const [row] = await testDb.db.select().from(invitations).where(eq(invitations.id, draft.invitationId));
@@ -147,3 +148,59 @@ describe("paid edits", () => {
     expect(await service.saveDraft(invitationId, access, { data: fixtures.typical, options: defaultOptions })).toEqual({ status: "edit_window_closed" });
   });
 });
+
+describe("draft persistence and template changes", () => {
+  async function draft() {
+    const d = await service.createDraft({ templateId: "clasico-marco-doble", ip: "1.1.1.1" });
+    if (d.status !== "created") throw new Error("draft not created");
+    return { id: d.invitationId, access: { editToken: d.editToken } };
+  }
+
+  it("saves incomplete drafts and reports what is missing", async () => {
+    const { id, access } = await draft();
+    const partial = { couple: { partnerOne: "Ana Pérez Soto" } };
+    const result = await service.saveDraft(id, access, { data: partial, options: defaultOptions });
+    expect(result.status).toBe("saved_incomplete");
+    if (result.status === "saved_incomplete") expect(result.issues.length).toBeGreaterThan(0);
+    const [row] = await testDb.db.select().from(invitations).where(eq(invitations.id, id));
+    expect(row.data).toEqual(partial);
+  });
+
+  it("still rejects invalid options and non-object or oversized data", async () => {
+    const { id, access } = await draft();
+    expect((await service.saveDraft(id, access, { data: {}, options: { font: "comic" } })).status).toBe("invalid");
+    expect((await service.saveDraft(id, access, { data: "texto", options: defaultOptions })).status).toBe("invalid");
+    const huge = { notes: "x".repeat(60_000) };
+    expect((await service.saveDraft(id, access, { data: huge, options: defaultOptions })).status).toBe("invalid");
+    const [row] = await testDb.db.select().from(invitations).where(eq(invitations.id, id));
+    expect(row.data).toEqual({});
+  });
+
+  it("keeps paid invitations strict: incomplete data is not saved", async () => {
+    const { invitationId, access } = await paidDraft();
+    const result = await service.saveDraft(invitationId, access, { data: { couple: { partnerOne: "Ana" } }, options: defaultOptions });
+    expect(result.status).toBe("invalid");
+    const [row] = await testDb.db.select().from(invitations).where(eq(invitations.id, invitationId));
+    expect(row.data).toEqual(fixtures.typical);
+  });
+
+  it("changes the template of a draft keeping its data and resetting style options", async () => {
+    const { id, access } = await draft();
+    await service.saveDraft(id, access, { data: fixtures.typical, options: { ...defaultOptions, color: "azul-noche" } });
+
+    expect(await service.changeTemplate(id, access, "editorial")).toEqual({ status: "changed" });
+    const [row] = await testDb.db.select().from(invitations).where(eq(invitations.id, id));
+    expect(row).toMatchObject({ templateId: "editorial", templateVersion: 1, data: fixtures.typical, options: { color: "negro", align: "izquierda" } });
+  });
+
+  it("refuses unknown templates, missing access and paid invitations", async () => {
+    const { id, access } = await draft();
+    expect(await service.changeTemplate(id, access, "no-existe")).toEqual({ status: "unknown_template" });
+    expect(await service.changeTemplate(id, { editToken: "otro" }, "editorial")).toEqual({ status: "not_found" });
+    const paid = await paidDraft();
+    expect(await service.changeTemplate(paid.invitationId, paid.access, "editorial")).toEqual({ status: "already_paid" });
+    const [row] = await testDb.db.select().from(invitations).where(eq(invitations.id, paid.invitationId));
+    expect(row.templateId).toBe("clasico-marco-doble");
+  });
+});
+
