@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { FakePaymentGateway } from "@/payments/fake-payment-gateway";
+import { isFakeGateway } from "@/payments/fake-gateway-guard";
 import { getContainer } from "@/server/container";
 
 const escape = (value: string) => value.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -8,7 +8,7 @@ const escape = (value: string) => value.replace(/[&<>"']/g, (c) => `&#${c.charCo
 export const GET: APIRoute = async ({ url }) => {
   const gateway = getContainer().gateway;
   const ref = url.searchParams.get("ref") ?? "";
-  if (!(gateway instanceof FakePaymentGateway) || !(await gateway.getPayment(ref))) {
+  if (!isFakeGateway(gateway) || !(await gateway.getPayment(ref))) {
     return new Response(null, { status: 404 });
   }
   const html = `<!doctype html><html lang="es"><meta charset="utf-8"><title>Pago de prueba</title>
@@ -22,10 +22,10 @@ export const GET: APIRoute = async ({ url }) => {
 
 export const POST: APIRoute = async ({ request, redirect }) => {
   const gateway = getContainer().gateway;
-  if (!(gateway instanceof FakePaymentGateway)) return new Response(null, { status: 404 });
+  if (!isFakeGateway(gateway)) return new Response(null, { status: 404 });
   const form = await request.formData();
   const ref = String(form.get("ref") ?? "");
   if (!(await gateway.getPayment(ref))) return new Response(null, { status: 404 });
-  gateway.setStatus(ref, form.get("result") === "approved" ? "approved" : "rejected");
+  await gateway.setStatus(ref, form.get("result") === "approved" ? "approved" : "rejected");
   return redirect(`/checkout/retorno?ref=${encodeURIComponent(ref)}`, 303);
 };

@@ -43,7 +43,9 @@ describe("database schema", () => {
       select table_name from information_schema.tables
       where table_schema = 'public' order by table_name`;
     expect(rows.map((row) => row.table_name)).toEqual([
+      "demo_outbox",
       "exports",
+      "fake_gateway_payments",
       "invitations",
       "magic_link_tokens",
       "payments",

@@ -7,7 +7,7 @@ import type {
 } from "./payment-gateway";
 import type { PaymentStatus } from "./payment-status";
 
-const SIGNATURE_HEADER = "x-fake-signature";
+export const SIGNATURE_HEADER = "x-fake-signature";
 
 /**
  * In-memory gateway for tests and local development. Webhooks are authentic only when they

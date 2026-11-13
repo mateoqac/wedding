@@ -2,8 +2,9 @@ import { PgBoss } from "pg-boss";
 import { createAuthService } from "@/auth/auth-service";
 import type { EmailSender } from "@/auth/email-sender";
 import { FileOutboxEmailSender } from "@/auth/file-outbox-email-sender";
+import { DbOutboxEmailSender } from "@/auth/db-outbox-email-sender";
 import { ResendEmailSender } from "@/auth/resend-email-sender";
-import { createDatabase } from "@/db/client";
+import { createDatabase, type Database } from "@/db/client";
 import { createBlobStorage } from "@/exports/blob-storage";
 import { createExportService } from "@/exports/export-service";
 import { createLocalStorage } from "@/exports/local-storage";
@@ -11,6 +12,7 @@ import { createExportQueue } from "@/exports/queue";
 import { createR2Storage } from "@/exports/r2-storage";
 import { scheduleDraftCleanup } from "@/invitations/draft-cleanup";
 import { createInvitationService } from "@/invitations/invitation-service";
+import { DbFakePaymentGateway } from "@/payments/db-fake-payment-gateway";
 import { FakePaymentGateway } from "@/payments/fake-payment-gateway";
 import type { PaymentGateway } from "@/payments/payment-gateway";
 import { createPaymentService } from "@/payments/payment-service";
@@ -24,9 +26,11 @@ const env = (name: string, fallback?: string) => {
   return value;
 };
 
-function buildEmailSender(): EmailSender {
+function buildEmailSender(db: Database): EmailSender {
   const apiKey = process.env.RESEND_API_KEY;
   if (apiKey) return ResendEmailSender.fromApiKey(apiKey, env("EMAIL_FROM"));
+  // Demo deployments have no writable disk: keep emails in the database and show them on screen.
+  if (process.env.DEMO_MODE === "1") return new DbOutboxEmailSender(db);
   return new FileOutboxEmailSender(env("EMAIL_OUTBOX_DIR", ".data/outbox"));
 }
 
@@ -49,9 +53,13 @@ function buildStorage(baseUrl: string) {
   });
 }
 
-function buildGateway(): PaymentGateway {
+function buildGateway(db: Database): PaymentGateway {
   const name = env("PAYMENT_GATEWAY", "fake");
-  if (name === "fake") return new FakePaymentGateway(env("FAKE_GATEWAY_SECRET", "fake-secret"));
+  if (name === "fake") {
+    const secret = env("FAKE_GATEWAY_SECRET", "fake-secret");
+    // Serverless instances share no memory, so demo deployments keep fake payments in Postgres.
+    return env("FAKE_GATEWAY_STORE", "memory") === "db" ? new DbFakePaymentGateway(db, secret) : new FakePaymentGateway(secret);
+  }
   throw new Error(`Payment gateway "${name}" has no adapter yet (design §11)`);
 }
 
@@ -61,9 +69,9 @@ function createContainer() {
   const databaseUrl = env("DATABASE_URL", "postgres://wedding:wedding@localhost:5433/wedding");
   const { db } = createDatabase(databaseUrl, { serverless: !!process.env.VERCEL });
   const rateLimiter = createRateLimiter({ db });
-  const email = buildEmailSender();
+  const email = buildEmailSender(db);
   const auth = createAuthService({ db, email, baseUrl, allowAccessLinkEmail: rateLimiter.allowAccessLinkEmail });
-  const gateway = buildGateway();
+  const gateway = buildGateway(db);
   const paymentService = createPaymentService({ db, gateway });
   const storage = buildStorage(baseUrl);
   // "http": separate render services (Docker workers). "inprocess": render inside the web
@@ -112,6 +120,8 @@ function createContainer() {
 
   return {
     baseUrl,
+    /** DEMO_MODE=1: shows the access-link email on screen after payment (no email provider). */
+    demoMode: process.env.DEMO_MODE === "1",
     db,
     auth,
     gateway,

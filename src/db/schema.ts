@@ -141,3 +141,26 @@ export const rateLimits = pgTable(
   },
   (table) => [primaryKey({ columns: [table.key, table.windowStart] })],
 );
+
+// Demo deployments only (vercel-demo): serverless instances share no memory, so the fake
+// payment gateway and the demo email outbox live in the database.
+export const fakeGatewayPayments = pgTable("fake_gateway_payments", {
+  providerRef: text("provider_ref").primaryKey(),
+  invitationId: uuid("invitation_id").notNull(),
+  amountClp: integer("amount_clp").notNull(),
+  status: paymentStatus("status").notNull().default("pending"),
+  raw: jsonb("raw"),
+  createdAt: createdAt(),
+});
+
+export const demoOutbox = pgTable(
+  "demo_outbox",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    to: text("to").notNull(),
+    subject: text("subject").notNull(),
+    text: text("text").notNull(),
+    createdAt: createdAt(),
+  },
+  (table) => [index("demo_outbox_to_idx").on(table.to, table.createdAt)],
+);

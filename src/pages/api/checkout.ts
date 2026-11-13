@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { FakePaymentGateway } from "@/payments/fake-payment-gateway";
+import { isFakeGateway } from "@/payments/fake-gateway-guard";
 import { getContainer } from "@/server/container";
 import { accessFor } from "@/server/http";
 
@@ -15,7 +15,7 @@ export const POST: APIRoute = async ({ request, cookies, locals, redirect }) => 
   );
   if (result.status === "redirect") {
     // The fake gateway has no hosted page; send the user to the dev stand-in (D12).
-    if (container.gateway instanceof FakePaymentGateway) {
+    if (isFakeGateway(container.gateway)) {
       const ref = new URL(result.url).searchParams.get("ref") ?? "";
       return redirect(`/checkout/fake?ref=${encodeURIComponent(ref)}`, 303);
     }

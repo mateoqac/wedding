@@ -15,6 +15,13 @@
       "when": 1794513653743,
       "tag": "0001_checkout_email",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794587277601,
+      "tag": "0002_demo_tables",
+      "breakpoints": true
     }
   ]
 }

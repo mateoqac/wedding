@@ -1,11 +1,13 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteHeader from "@/layouts/SiteHeader.astro";
+import { latestDemoEmail } from "@/auth/db-outbox-email-sender";
 import { getContainer } from "@/server/container";
 import { accessFor } from "@/server/http";
 
 const id = Astro.params.id as string;
-const invitation = await getContainer().invitations.load(id, accessFor(Astro.cookies, id, Astro.locals.user?.id));
+const container = getContainer();
+const invitation = await container.invitations.load(id, accessFor(Astro.cookies, id, Astro.locals.user?.id));
 if (!invitation) return Astro.redirect("/acceso?error=no_access");
 if (invitation.status !== "paid") return Astro.redirect(`/invitaciones/${id}/pagar`);
 
@@ -17,12 +19,22 @@ const formats = [
   { id: "story", name: "Historia 9:16", text: "1080 x 1920 para Instagram o estados de WhatsApp." },
 ];
 const justPaid = Astro.url.searchParams.has("pagado");
+// Demo mode: no email provider, so show the email the couple would receive.
+const demoEmail = container.demoMode && invitation.checkoutEmail ? await latestDemoEmail(container.db, invitation.checkoutEmail) : null;
+const demoLink = demoEmail?.text.match(/https?:\/\/\S+/)?.[0];
 ---
 
 <BaseLayout title="Descargas — Partes de matrimonio">
   <SiteHeader user={Astro.locals.user} />
   <main class="mx-auto max-w-3xl px-4 py-12">
     {justPaid && <p role="status" class="mb-6 rounded-md border p-3 text-sm">¡Pago confirmado! Te enviamos un email con el recibo y tu enlace de acceso.</p>}
+    {demoEmail && (
+      <aside class="mb-6 rounded-md border border-dashed p-4 text-sm" aria-label="Email de demostración">
+        <p class="font-medium">Modo demo: este es el email que recibirían los novios</p>
+        <p class="mt-1 text-muted-foreground">Para: {demoEmail.to} · {demoEmail.subject}</p>
+        {demoLink && <p class="mt-2"><a href={demoLink} class="break-all underline">Abrir enlace de acceso</a> (ábrelo en otra ventana para simular otro dispositivo)</p>}
+      </aside>
+    )}
     <h1 class="text-2xl font-semibold">Descarga tu invitación</h1>
     <ul class="mt-6 grid gap-4">
       {formats.map((format) => (
